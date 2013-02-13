@@ -11,7 +11,6 @@ package com.milkenknights;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Talon;
-//import edu.wpi.first.wpilibj.templates.JStick;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -54,8 +53,6 @@ public class Knight extends IterativeRobot {
     double prev_err;
     public void autonomousPeriodic() {
     	//drive.tankDrive(0.4, 0.4);
-    	
-    	// we want to 
     }
 
     /**

@@ -16,7 +16,7 @@ public class Drive extends RobotDrive {
 			// experimental code for adjusting the two sides
 			// to move at the same speed
 			rspeed = lspeed = curveInput(power,2);
-			// if left is greater than right, increase left
+			// if left is greater than right, decrease left
 			if (Math.abs(leftRate) > Math.abs(rightRate)) {
 				lspeed -= (leftRate-rightRate)*kp;
 			} else {
