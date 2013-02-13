@@ -115,35 +115,23 @@ public class Drive extends RobotDrive {
 	public double getRight() {
 		return (m_frontRightMotor.get() + m_rearRightMotor.get())/2;
 	}
-	
-	private void init() {
-		old_turn = 0;
-		neg_inertia_accumulator = 0;
-		quickStopAccumulator = 0;
-	}
-	
-
 
 	public Drive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor,
 			int rearRightMotor) {
 		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
-		init();
 	}
 
 	public Drive(SpeedController frontLeftMotor, SpeedController rearLeftMotor,
 			SpeedController frontRightMotor, SpeedController rearRightMotor) {
 		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
-		init();
 	}
 
 	public Drive(int leftMotorChannel, int rightMotorChannel) {
 		super(leftMotorChannel, rightMotorChannel);
-		init();
 	}
 
 	public Drive(SpeedController leftMotor, SpeedController rightMotor) {
 		super(leftMotor, rightMotor);
-		init();
 	}
 
 	private double curveInput(double in, int iterations) {
