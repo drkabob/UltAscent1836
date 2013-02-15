@@ -10,6 +10,7 @@ package com.milkenknights;
 
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.Talon;
 
 /**
@@ -28,16 +29,21 @@ public class Knight extends IterativeRobot {
 	JStick xbox;
 	private boolean usingCheesy;
 	private DriverStationLCD lcd;
+
+	private Preferences prefs;
 	
 	private Drive drive;
 	public Knight() {
-		drive = new Drive(new Talon(leftMotor),new Talon(rightMotor));
+		prefs = Preferences.getInstance();
+		drive = new Drive(new Talon(prefs.getInt("leftmotor",leftMotor)),
+							new Talon(prefs.getInt("rightmotor",rightMotor)));
 		xbox = new JStick(1);
 		lcd = DriverStationLCD.getInstance();
 
 		usingCheesy = false;
 		integral_err = 0;
 		prev_err = 0;
+
 	}
     /**
      * This function is run when the robot is first started up and should be
