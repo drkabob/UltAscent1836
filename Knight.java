@@ -8,6 +8,7 @@
 package com.milkenknights;
 
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
@@ -29,6 +30,8 @@ public class Knight extends IterativeRobot {
 	JStick xbox;
 	private boolean usingCheesy;
 	private DriverStationLCD lcd;
+    
+    private Compressor compressor;
 
 	private Preferences prefs;
 	
@@ -44,6 +47,8 @@ public class Knight extends IterativeRobot {
 		integral_err = 0;
 		prev_err = 0;
 
+        compressor = new Compressor(6,7);
+        compressor.start();
 	}
     /**
      * This function is run when the robot is first started up and should be
