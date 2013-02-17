@@ -86,7 +86,9 @@ public class Knight extends IterativeRobot {
     double integral_err;
     double prev_err;
     public void autonomousPeriodic() {
-    	//drive.tankDrive(0.4, 0.4);
+    	drive.tankDrive(0.4, 0.4);
+		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
+		disp_message.setData("autonomous");
     }
 
     /**
@@ -145,12 +147,12 @@ public class Knight extends IterativeRobot {
 
 		// update the display
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
-		disp_message.setData("Enabled");
+		disp_message.setData("teleop");
     }
 
 	public void disabledPeriodic() {
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
-		disp_message.setData("Enabled");
+		disp_message.setData("disabled");
 	}
     
     /**
