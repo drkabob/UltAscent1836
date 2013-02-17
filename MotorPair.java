@@ -50,19 +50,6 @@ public class MotorPair implements SpeedController {
 		mb.disable();
 	}
 
-	// checks the boolean on. If it is true, set
-	// the victor to 1 if dir is true, or set it
-	// to -1 if dir is false (reverse).
-	public void setAsBool(boolean on, boolean dir) {
-		set(on ? (dir ? 1 : -1) : 0);
-	}
-	
-	// checks the boolean on. If it is true, set the
-	// victor to speed. Otherwise, set it to zero.
-	public void checkAndSet(boolean on, double speed) {
-		set(on ? speed : 0);
-	}
-
 	// we have to implement these methods as part of SpeedController
 	// even though they're not really used
 	public void pidWrite(double output) {
