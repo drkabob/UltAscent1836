@@ -1,28 +1,29 @@
 package com.milkenknights;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Talon;
 
-public class MotorPair implements SpeedController {
-	private SpeedController ma;
-	private SpeedController mb;
+public class TalonPair implements SpeedController {
+	private Talon ma;
+	private Talon mb;
 
 	private boolean reva;
 	private boolean revb;
 
 	private double speed;
 
-	public MotorPair(SpeedController a, SpeedController b) {
+	public TalonPair(int a, int b) {
 		// if we aren't told that the motors are reversed or not,
 		// set them to false by default
 		this(a,false,b,false);
 	}
 
-	public MotorPair(SpeedController a, boolean arev, SpeedController b, boolean brev) {
-		ma = a;
+	public TalonPair(int a, boolean arev, int b, boolean brev) {
+		ma = new Talon(a);
 		ma.set(0);
 		reva = arev;
 
-		mb = b;
+		mb = new Talon(b);
 		mb.set(0);
 		revb = brev;
 	}
