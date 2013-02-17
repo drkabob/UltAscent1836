@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 
 /**
@@ -33,7 +34,9 @@ public class Knight extends IterativeRobot {
 	
 	private static final double jitterRange = 0.008;
 	
-	JStick xbox;
+	JStick xbox; // XBox controller
+	JStick atk; // Logitech ATK3 controller
+
 	private boolean usingCheesy;
 	private DriverStationLCD lcd;
     
@@ -43,6 +46,9 @@ public class Knight extends IterativeRobot {
 	private Preferences prefs;
 	
 	private Drive drive;
+	private SpeedController shooter;
+	private SpeedController intake;
+	private SpeedController actuator;
 
 	private InsightLT display;
 	private DecimalData disp_batteryVoltage;
@@ -52,7 +58,14 @@ public class Knight extends IterativeRobot {
 		prefs = Preferences.getInstance();
 		drive = new Drive(new Talon(prefs.getInt("leftmotor",leftMotor)),
 				new Talon(prefs.getInt("rightmotor",rightMotor)));
+
+		shooter = new TalonTriple(1,2,3);
+		intake = new Talon(4);
+		actuator = new Talon(6);
+
 		xbox = new JStick(1);
+		atk = new JStick(2);
+
 		lcd = DriverStationLCD.getInstance();
 
 		usingCheesy = false;
