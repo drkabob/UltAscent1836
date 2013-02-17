@@ -51,7 +51,7 @@ public class Knight extends IterativeRobot {
 	public Knight() {
 		prefs = Preferences.getInstance();
 		drive = new Drive(new Talon(prefs.getInt("leftmotor",leftMotor)),
-							new Talon(prefs.getInt("rightmotor",rightMotor)));
+				new Talon(prefs.getInt("rightmotor",rightMotor)));
 		xbox = new JStick(1);
 		lcd = DriverStationLCD.getInstance();
 
@@ -76,7 +76,7 @@ public class Knight extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-        compressor.start();
+		compressor.start();
 		solenoids.set(DoubleSolenoid.Value.kForward);
     }
 
@@ -86,7 +86,7 @@ public class Knight extends IterativeRobot {
     double integral_err;
     double prev_err;
     public void autonomousPeriodic() {
-    	drive.tankDrive(0.4, 0.4);
+		drive.tankDrive(0.4, 0.4);
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("autonomous");
     }
