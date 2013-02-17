@@ -1,11 +1,12 @@
 package com.milkenknights;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Talon;
 
-public class MotorTriple implements SpeedController {
-	private SpeedController ma;
-	private SpeedController mb;
-	private SpeedController mc;
+public class TalonTriple implements SpeedController {
+	private Talon ma;
+	private Talon mb;
+	private Talon mc;
 
 	private boolean reva;
 	private boolean revb;
@@ -13,21 +14,20 @@ public class MotorTriple implements SpeedController {
 
 	private double speed;
 	
-	public MotorTriple(SpeedController a, SpeedController b, SpeedController c) {
-		ma = a;
-				
+	public TalonTriple(int a, int b, int c) {
+		this(a,false,b,false,c,false);
 	}
 
-	public MotorTriple(SpeedController a, boolean arev, SpeedController b, boolean brev, SpeedController c, boolean crev) {
-		ma = a;
+	public TalonTriple(int a, boolean arev, int b, boolean brev, int c, boolean crev) {
+		ma = new Talon(a);
 		ma.set(0);
 		reva = arev;
 
-		mb = b;
+		mb = new Talon(b);
 		mb.set(0);
 		revb = brev;
 		
-		mc = c;
+		mc = new Talon(c);
 		mc.set(0);
 		revc = crev;
 	}
