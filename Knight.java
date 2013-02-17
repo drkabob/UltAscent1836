@@ -9,6 +9,7 @@ package com.milkenknights;
 
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
@@ -32,6 +33,7 @@ public class Knight extends IterativeRobot {
 	private DriverStationLCD lcd;
     
     private Compressor compressor;
+	private DoubleSolenoid solenoids;
 
 	private Preferences prefs;
 	
@@ -48,13 +50,14 @@ public class Knight extends IterativeRobot {
 		prev_err = 0;
 
         compressor = new Compressor(6,7);
-        compressor.start();
+		solenoids = new DoubleSolenoid(1,2);
 	}
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+        compressor.start();
     }
 
     /**
@@ -75,6 +78,14 @@ public class Knight extends IterativeRobot {
 		// Press A to toggle cheesy drive
 		if (xbox.isReleased(JStick.XBOX_A)) {
 			usingCheesy = !usingCheesy;
+		}
+
+		// use RB and LB to control the solenoids
+		if (xbox.isReleased(JStick.XBOX_RB)) {
+			solenoids.set(DoubleSolenoid.Value.kForward);
+		}
+		if (xbox.isReleased(JStick.XBOX_LB)) {
+			solenoids.set(DoubleSolenoid.Value.kReverse);
 		}
 		
 		double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), jitterRange);
