@@ -37,7 +37,7 @@ public class Knight extends IterativeRobot {
 	private boolean usingCheesy;
 	private DriverStationLCD lcd;
     
-    private Compressor compressor;
+	private Compressor compressor;
 	private DoubleSolenoid solenoids;
 
 	private Preferences prefs;
@@ -117,7 +117,7 @@ public class Knight extends IterativeRobot {
 			break;
 			
 		case DoubleSolenoid.Value.kReverse_val:
-			lcd.println(DriverStationLCD.Line.kUser3,1,"Low Gear");
+			lcd.println(DriverStationLCD.Line.kUser3,1,"Low Gear ");
 			break;
 		}
 
