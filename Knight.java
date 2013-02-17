@@ -123,9 +123,9 @@ public class Knight extends IterativeRobot {
 
 		// show if the compressor is running
 		if (compressor.getPressureSwitchValue()) {
-			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is running");
+			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is off    ");
 		} else {
-			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is off");
+			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is running");
 		}
 		
 		double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), jitterRange);
