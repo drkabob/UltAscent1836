@@ -9,6 +9,8 @@ public class MotorPair implements SpeedController {
 	private boolean reva;
 	private boolean revb;
 
+	private double speed;
+
 	public MotorPair(SpeedController a, SpeedController b) {
 		// if we aren't told that the motors are reversed or not,
 		// set them to false by default
@@ -26,7 +28,7 @@ public class MotorPair implements SpeedController {
 	}
 
 	public double get() {
-		return (getA()+getB())/2;
+		return speed;
 	}
 
 	public double getA() {
@@ -37,17 +39,10 @@ public class MotorPair implements SpeedController {
 		return mb.get();
 	}
 
-	public void set(double speed) {
-		if(reva) {
-			ma.set(-speed);
-		} else {
-			ma.set(speed);
-		}
-		if(revb) {
-			mb.set(-speed);
-		} else {
-			mb.set(speed);
-		}
+	public void set(double newspeed) {
+		speed = newspeed;
+		ma.set(reva ? -newspeed : newspeed);
+		mb.set(revb ? -newspeed : newspeed);
 	}
 
 	public void disable() {
@@ -71,8 +66,8 @@ public class MotorPair implements SpeedController {
 	// we have to implement these methods as part of SpeedController
 	// even though they're not really used
 	public void pidWrite(double output) {
-		ma.pidWrite(output);
-		mb.pidWrite(output);
+		ma.pidWrite(reva ? -output : output);
+		mb.pidWrite(revb ? -output : output);
 	}
 	public void set(double speed, byte syncGroup) {
 		set(speed);
