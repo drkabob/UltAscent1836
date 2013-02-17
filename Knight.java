@@ -50,6 +50,7 @@ public class Knight extends IterativeRobot {
 	private SpeedController intake;
 	private SpeedController actuator;
 
+	// stuff for the InsightLT display
 	private InsightLT display;
 	private DecimalData disp_batteryVoltage;
 	private StringData disp_message;
@@ -75,12 +76,16 @@ public class Knight extends IterativeRobot {
         compressor = new Compressor(1,1);
 		solenoids = new DoubleSolenoid(1,2);
 
+		// configure the display to have two lines of text
 		display = new InsightLT(InsightLT.TWO_ONE_LINE_ZONES);
 		display.startDisplay();
 
+		// add battery display
 		disp_batteryVoltage = new DecimalData("Bat:");
 		display.registerData(disp_batteryVoltage,1);
 
+		// this shows what mode the robot is in
+		// i.e. teleop, autonomous, disabled
 		disp_message = new StringData();
 		display.registerData(disp_message,2);
 	}
@@ -157,11 +162,11 @@ public class Knight extends IterativeRobot {
 
 		if (usingCheesy) {
 			drive.cheesyDrive(rightStickY, leftStickX, xbox.isPressed(JStick.XBOX_LJ));
-			lcd.println(DriverStationLCD.Line.kUser4,1,"cheesy");
+			lcd.println(DriverStationLCD.Line.kUser4,1,"cheesy      ");
 		} else {
 			if (!drive.straightDrive(xbox.getAxis(JStick.XBOX_TRIG))) {
 				drive.tankDrive(leftStickY, rightStickY);
-				lcd.println(DriverStationLCD.Line.kUser4,1,"tank drive");
+				lcd.println(DriverStationLCD.Line.kUser4,1,"tank drive   ");
 			} else {
 				lcd.println(DriverStationLCD.Line.kUser4,1,"straightDrive");
 			}

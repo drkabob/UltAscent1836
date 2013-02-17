@@ -8,6 +8,7 @@ public class TalonTriple implements SpeedController {
 	private Talon mb;
 	private Talon mc;
 
+	// whether or not the Talon should be reversed
 	private boolean reva;
 	private boolean revb;
 	private boolean revc;
@@ -61,6 +62,8 @@ public class TalonTriple implements SpeedController {
 		mc.set(revc ? -newspeed : newspeed);
 	}
 
+	// we have to implement these methods as part of SpeedController
+	// even though they're not really used
 	@Override
 	public void set(double newspeed, byte arg1) {
 		set(newspeed);
