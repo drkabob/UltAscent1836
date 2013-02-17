@@ -140,6 +140,16 @@ public class Knight extends IterativeRobot {
 		} else {
 			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is running");
 		}
+
+		// joystick button 2 controls intake
+		intake.set(atk.isPressed(2) ? 1 : 0);
+
+		// joystick button 3 should spin the shooter
+		shooter.set(atk.isPressed(3) ? 1 : 0);
+
+		// joystick trigger should spin actuator,
+		// but only if the shooter is moving
+		actuator.set((atk.isPressed(3) && atk.isPressed(1)) ? 1 : 0);
 		
 		double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), jitterRange);
 		double leftStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSY), jitterRange);
