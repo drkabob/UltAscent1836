@@ -8,8 +8,13 @@
 package com.milkenknights;
 
 
+import com.milkenknights.InsightLT.DecimalData;
+import com.milkenknights.InsightLT.InsightLT;
+import com.milkenknights.InsightLT.StringData;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
@@ -38,6 +43,11 @@ public class Knight extends IterativeRobot {
 	private Preferences prefs;
 	
 	private Drive drive;
+
+	private InsightLT display;
+	private DecimalData disp_batteryVoltage;
+	private StringData disp_message;
+	
 	public Knight() {
 		prefs = Preferences.getInstance();
 		drive = new Drive(new Talon(prefs.getInt("leftmotor",leftMotor)),
@@ -49,8 +59,17 @@ public class Knight extends IterativeRobot {
 		integral_err = 0;
 		prev_err = 0;
 
-        compressor = new Compressor(6,7);
+        compressor = new Compressor(1,1);
 		solenoids = new DoubleSolenoid(1,2);
+
+		display = new InsightLT(InsightLT.TWO_ONE_LINE_ZONES);
+		display.startDisplay();
+
+		disp_batteryVoltage = new DecimalData("Bat:");
+		display.registerData(disp_batteryVoltage,1);
+
+		disp_message = new StringData();
+		display.registerData(disp_message,2);
 	}
     /**
      * This function is run when the robot is first started up and should be
@@ -58,6 +77,7 @@ public class Knight extends IterativeRobot {
      */
     public void robotInit() {
         compressor.start();
+		solenoids.set(DoubleSolenoid.Value.kForward);
     }
 
     /**
@@ -87,6 +107,24 @@ public class Knight extends IterativeRobot {
 		if (xbox.isReleased(JStick.XBOX_LB)) {
 			solenoids.set(DoubleSolenoid.Value.kReverse);
 		}
+
+		// show the solenoids status
+		switch (solenoids.get().value) {
+		case DoubleSolenoid.Value.kForward_val:
+			lcd.println(DriverStationLCD.Line.kUser3,1,"High Gear");
+			break;
+			
+		case DoubleSolenoid.Value.kReverse_val:
+			lcd.println(DriverStationLCD.Line.kUser3,1,"Low Gear");
+			break;
+		}
+
+		// show if the compressor is running
+		if (compressor.getPressureSwitchValue()) {
+			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is running");
+		} else {
+			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is off");
+		}
 		
 		double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), jitterRange);
 		double leftStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSY), jitterRange);
@@ -98,11 +136,22 @@ public class Knight extends IterativeRobot {
 		} else {
 			if (!drive.straightDrive(xbox.getAxis(JStick.XBOX_TRIG))) {
 				drive.tankDrive(leftStickY, rightStickY);
+				lcd.println(DriverStationLCD.Line.kUser4,1,"tank drive");
 			} else {
 				lcd.println(DriverStationLCD.Line.kUser4,1,"straightDrive");
 			}
 		}
+		lcd.updateLCD();
+
+		// update the display
+		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
+		disp_message.setData("Enabled");
     }
+
+	public void disabledPeriodic() {
+		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
+		disp_message.setData("Enabled");
+	}
     
     /**
      * This function is called periodically during test mode
