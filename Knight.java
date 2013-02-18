@@ -96,7 +96,7 @@ public class Knight extends IterativeRobot {
      */
     public void robotInit() {
 		compressor.start();
-		solenoids.set(DoubleSolenoid.Value.kForward);
+		solenoids.set(DoubleSolenoid.Value.kReverse);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft,true);
     }
@@ -123,12 +123,13 @@ public class Knight extends IterativeRobot {
 			usingCheesy = !usingCheesy;
 		}
 
-		// use RB and LB to control the solenoids
-		if (xbox.isReleased(JStick.XBOX_RB)) {
-			solenoids.set(DoubleSolenoid.Value.kForward);
-		}
+		// use LB to toggle high and low gear
 		if (xbox.isReleased(JStick.XBOX_LB)) {
-			solenoids.set(DoubleSolenoid.Value.kReverse);
+			if(solenoids.get().value == DoubleSolenoid.Value.kForward_val) {
+				solenoids.set(DoubleSolenoid.Value.kReverse);
+			} else {
+				solenoids.set(DoubleSolenoid.Value.kForward);
+			}
 		}
 
 		// show the solenoids status
