@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 
@@ -29,8 +30,8 @@ import edu.wpi.first.wpilibj.Talon;
  * directory.
  */
 public class Knight extends IterativeRobot {
-	private static final int leftMotor = 8;
-	private static final int rightMotor = 5;
+	private static final int leftMotor = 5;
+	private static final int rightMotor = 8;
 	
 	private static final double jitterRange = 0.008;
 	
@@ -96,6 +97,8 @@ public class Knight extends IterativeRobot {
     public void robotInit() {
 		compressor.start();
 		solenoids.set(DoubleSolenoid.Value.kForward);
+		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft,true);
     }
 
     /**
@@ -131,11 +134,11 @@ public class Knight extends IterativeRobot {
 		// show the solenoids status
 		switch (solenoids.get().value) {
 		case DoubleSolenoid.Value.kForward_val:
-			lcd.println(DriverStationLCD.Line.kUser3,1,"High Gear");
+			lcd.println(DriverStationLCD.Line.kUser3,1,"Low Gear ");
 			break;
 			
 		case DoubleSolenoid.Value.kReverse_val:
-			lcd.println(DriverStationLCD.Line.kUser3,1,"Low Gear ");
+			lcd.println(DriverStationLCD.Line.kUser3,1,"High Gear");
 			break;
 		}
 
