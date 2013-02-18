@@ -1,6 +1,5 @@
 package com.milkenknights;
 
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 
@@ -8,15 +7,14 @@ public class Drive extends RobotDrive {
 	// should maintain a constant speed on both sides of the robot
 	// by reading encoder values
 	public boolean straightDriveEnc(double power, double leftRate, double rightRate) {
-		double kp = Preferences.getInstance().getDouble("kp", 0.1);
+		double kp = Knight.prefs.getDouble("kp", 0.1); //the new line
 		if (power != 0) {
-			double lspeed, rspeed;
-			lspeed = rspeed = 0;
+			double lspeed, rspeed = 0;
 			
 			// experimental code for adjusting the two sides
 			// to move at the same speed
 			rspeed = lspeed = curveInput(power,2);
-			// if left is greater than right, decrease left
+			// if left is greater than right, decrease left (and vise versa)
 			if (Math.abs(leftRate) > Math.abs(rightRate)) {
 				lspeed -= (leftRate-rightRate)*kp;
 			} else {
@@ -41,6 +39,12 @@ public class Drive extends RobotDrive {
 	double old_turn;
 	double neg_inertia_accumulator;
 	double quickStopAccumulator;
+	/**
+	 * TODO document this method
+	 * @param power
+	 * @param turn
+	 * @param spin
+	 * @return	*/
 	public boolean cheesyDrive(double power, double turn, boolean spin) {
 		if (power == 0) {
 			return false;
@@ -133,6 +137,12 @@ public class Drive extends RobotDrive {
 		super(leftMotor, rightMotor);
 	}
 
+	
+	/**
+	 * TODO document this method
+	 * @param in
+	 * @param iterations
+	 * @return	*/
 	private double curveInput(double in, int iterations) {
 		if (iterations > 0) {
 			return curveInput(Math.sin(Math.PI*in/2),iterations-1);

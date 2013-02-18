@@ -29,10 +29,7 @@ import edu.wpi.first.wpilibj.Talon;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Knight extends IterativeRobot {
-	private static final int leftMotor = 5;
-	private static final int rightMotor = 8;
-	
+public class Knight extends IterativeRobot {	
 	private static final double jitterRange = 0.008;
 	
 	JStick xbox; // XBox controller
@@ -45,8 +42,8 @@ public class Knight extends IterativeRobot {
 	// solenoids in "reverse" means high gear,
 	// solenoids in "forward" means low gear
 	private DoubleSolenoid solenoids;
-
-	private Preferences prefs;
+	
+	public final static PrefsHelper prefs = new PrefsHelper();
 	
 	private Drive drive;
 	private SpeedController shooter;
@@ -60,13 +57,14 @@ public class Knight extends IterativeRobot {
 	
 	public Knight() {
 		// get robot preferences, stored on the cRIO
-		prefs = Preferences.getInstance();
-		drive = new Drive(new Talon(prefs.getInt("leftmotor",leftMotor)),
-				new Talon(prefs.getInt("rightmotor",rightMotor)));
+		drive = new Drive(new Talon(prefs.getInt("leftmotor",5)),
+				new Talon(prefs.getInt("rightmotor",8)));
 
-		shooter = new TalonTriple(1,2,3);
-		intake = new Talon(4);
-		actuator = new Talon(6);
+		shooter = new TalonTriple(prefs.getInt("shootera", 1),
+				prefs.getInt("shooterb", 2),
+				prefs.getInt("shooterc", 3));
+		intake = new Talon(prefs.getInt("intake",4));
+		actuator = new Talon(prefs.getInt("actuator", 6));
 
 		xbox = new JStick(1);
 		atk = new JStick(2);
@@ -178,6 +176,7 @@ public class Knight extends IterativeRobot {
 				lcd.println(DriverStationLCD.Line.kUser4,1,"straightDrive");
 			}
 		}
+		
 		lcd.updateLCD();
 
 		// update the display
