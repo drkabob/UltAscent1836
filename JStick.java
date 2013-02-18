@@ -49,25 +49,50 @@ public class JStick {
 			axes[i] = jstick.getRawAxis(i);
 		}
 	}
-
+	
+	/**
+	 * Gets the button value
+	 *
+	 * @param b The button number to be read.
+	 * @return The state of the button.
+	 */
 	public boolean isPressed(int b) {
 		if(b >= 0 && b < buttonPressed.length)
 			return buttonPressed[b];
 		else return false;
 	}
 
+	/**
+	 * Gets whether or not the button is being released
+	 *
+	 * @param b The button number to be read.
+	 * @return True if the button was pressed in the last update but not now.
+	 */
 	public boolean isReleased(int b) {
 		if(b >= 0 && b < buttonPressed.length)
 			return !buttonPressed[b] && buttonLastPressed[b];
 		else return false;
 	}
 
+	/**
+	 * Gets the value of the axis.
+	 *
+	 * @param b The axis to read.
+	 * @return The value of the axis.
+	 */
 	public double getAxis(int b) {
 		if(b >= 0 && b < axes.length)
 			return axes[b];
 		else return 0;
 	}
 	
+	/**
+	 * If the absolute value of the input is in the jitterRange, return 0.
+	 *
+	 * @param in The input
+	 * @param jitterRange the range that the input shouldn't be in. Should be positive.
+	 * @return The input with jitter removed if necessary
+	 */
 	public static double removeJitter(double in, double jitterRange) {
 		if (Math.abs(in) > jitterRange) {
 			return in;

@@ -4,8 +4,14 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 
 public class Drive extends RobotDrive {
-	// should maintain a constant speed on both sides of the robot
-	// by reading encoder values
+	/**
+	 * Moves the robot straight and attempts to straighten
+	 * out the robot if one side is moving faster
+	 *
+	 * @param power The desired speed
+	 * @param leftRate The movement speed of the left wheels
+	 * @param rightRate The movement speed of the right wheels
+	 */
 	public boolean straightDriveEnc(double power, double leftRate, double rightRate) {
 		double kp = Knight.prefs.getDouble("kp", 0.1); //the new line
 		if (power != 0) {
@@ -28,6 +34,11 @@ public class Drive extends RobotDrive {
 		}
 	}
 	
+	/**
+	 * Gives both sides of the robot the same amount of power
+	 *
+	 * @param power The power to be sent
+	 */
 	public boolean straightDrive(double power) {
 		return straightDriveEnc(power,0,0);
 	}
@@ -40,11 +51,17 @@ public class Drive extends RobotDrive {
 	double neg_inertia_accumulator;
 	double quickStopAccumulator;
 	/**
-	 * TODO document this method
-	 * @param power
-	 * @param turn
-	 * @param spin
-	 * @return	*/
+	 * Team 254's cheesy drive
+	 *
+	 * Use one joystick for throttle, and the other for turning.
+	 * Also supports a "quickturn" function that allows the robot
+	 * to spin in place
+	 *
+	 * @param power How fast the robot should go
+	 * @param turn The direction the robot should turn in
+	 * @param spin Whether or not the robot should go in "quickturn" mode
+	 * @return False if power is zero.
+	 */
 	public boolean cheesyDrive(double power, double turn, boolean spin) {
 		if (power == 0) {
 			return false;
@@ -112,13 +129,6 @@ public class Drive extends RobotDrive {
 		return true;
 	}
 	
-	public double getLeft() {
-		return (m_frontLeftMotor.get() + m_rearLeftMotor.get())/2;
-	}
-	public double getRight() {
-		return (m_frontRightMotor.get() + m_rearRightMotor.get())/2;
-	}
-
 	public Drive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor,
 			int rearRightMotor) {
 		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
@@ -139,9 +149,9 @@ public class Drive extends RobotDrive {
 
 	
 	/**
-	 * TODO document this method
-	 * @param in
-	 * @param iterations
+	 * Applies a sine function to input
+	 * @param in The original input
+	 * @param iterations How many times the sine function should be applied
 	 * @return	*/
 	private double curveInput(double in, int iterations) {
 		if (iterations > 0) {

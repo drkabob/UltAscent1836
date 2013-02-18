@@ -15,10 +15,27 @@ public class TalonTriple implements SpeedController {
 
 	private double speed;
 	
+	/**
+	 * Creates a triple of Talons
+	 *
+	 * @param a The PWM channel that the first Talon is attached to.
+	 * @param b The PWM channel that the second Talon is attached to.
+	 * @param c The PWM channel that the third Talon is attached to.
+	 */
 	public TalonTriple(int a, int b, int c) {
 		this(a,false,b,false,c,false);
 	}
 
+	/**
+	 * Creates a triple of Talons, with options to reverse motors.
+	 *
+	 * @param a The PWM channel that the first Talon is attached to.
+	 * @param arev If Talon A should be reversed.
+	 * @param b The PWM channel that the second Talon is attached to.
+	 * @param brev If Talon B should be reversed.
+	 * @param c The PWM channel that the third Talon is attached to.
+	 * @param crev If Talon C should be reversed.
+	 */
 	public TalonTriple(int a, boolean arev, int b, boolean brev, int c, boolean crev) {
 		ma = new Talon(a);
 		ma.set(0);
@@ -39,6 +56,11 @@ public class TalonTriple implements SpeedController {
 		mc.disable();
 	}
 
+	/**
+	 * Get the recently set value of the Talons
+	 *
+	 * @return The most recently set value
+	 */
 	public double get() {
 		return speed;
 	}
@@ -53,6 +75,11 @@ public class TalonTriple implements SpeedController {
 		return mc.get();
 	}
 
+	/**
+	 * Set the PWM value for the Talons.
+	 *
+	 * @param newspeed The speed value between -1.0 and 1.0 to set.
+	 */
 	public void set(double newspeed) {
 		ma.set(reva ? -newspeed : newspeed);
 		mb.set(revb ? -newspeed : newspeed);
