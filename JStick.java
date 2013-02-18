@@ -51,27 +51,21 @@ public class JStick {
 	}
 
 	public boolean isPressed(int b) {
-		try {
+		if(b >= 0 && b < buttonPressed.length)
 			return buttonPressed[b];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return false;
-		}
+		else return false;
 	}
 
 	public boolean isReleased(int b) {
-		try {
+		if(b >= 0 && b < buttonPressed.length)
 			return !buttonPressed[b] && buttonLastPressed[b];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return false;
-		}
+		else return false;
 	}
 
 	public double getAxis(int b) {
-		try {
+		if(b >= 0 && b < axes.length)
 			return axes[b];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return 0;
-		}
+		else return 0;
 	}
 	
 	public static double removeJitter(double in, double jitterRange) {
