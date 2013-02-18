@@ -29,7 +29,6 @@ public class TalonPair implements SpeedController {
 		revb = brev;
 	}
 
-	@Override
 	public double get() {
 		return speed;
 	}
@@ -42,14 +41,12 @@ public class TalonPair implements SpeedController {
 		return mb.get();
 	}
 
-	@Override
 	public void set(double newspeed) {
 		speed = newspeed;
 		ma.set(reva ? -newspeed : newspeed);
 		mb.set(revb ? -newspeed : newspeed);
 	}
 
-	@Override
 	public void disable() {
 		ma.disable();
 		mb.disable();
@@ -57,12 +54,10 @@ public class TalonPair implements SpeedController {
 
 	// we have to implement these methods as part of SpeedController
 	// even though they're not really used
-	@Override
 	public void pidWrite(double output) {
 		ma.pidWrite(reva ? -output : output);
 		mb.pidWrite(revb ? -output : output);
 	}
-	@Override
 	public void set(double speed, byte syncGroup) {
 		set(speed);
 	}

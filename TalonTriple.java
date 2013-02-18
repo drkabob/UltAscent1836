@@ -33,14 +33,12 @@ public class TalonTriple implements SpeedController {
 		revc = crev;
 	}
 
-	@Override
 	public void disable() {
 		ma.disable();
 		mb.disable();
 		mc.disable();
 	}
 
-	@Override
 	public double get() {
 		return speed;
 	}
@@ -55,7 +53,6 @@ public class TalonTriple implements SpeedController {
 		return mc.get();
 	}
 
-	@Override
 	public void set(double newspeed) {
 		ma.set(reva ? -newspeed : newspeed);
 		mb.set(revb ? -newspeed : newspeed);
@@ -64,11 +61,9 @@ public class TalonTriple implements SpeedController {
 
 	// we have to implement these methods as part of SpeedController
 	// even though they're not really used
-	@Override
 	public void set(double newspeed, byte arg1) {
 		set(newspeed);
 	}
-	@Override
 	public void pidWrite(double output) {
 		ma.pidWrite(reva ? -output : output);
 		mb.pidWrite(revb ? -output : output);
