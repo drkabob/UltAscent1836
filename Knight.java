@@ -42,6 +42,8 @@ public class Knight extends IterativeRobot {
 	private DriverStationLCD lcd;
     
 	private Compressor compressor;
+	// solenoids in "reverse" means high gear,
+	// solenoids in "forward" means low gear
 	private DoubleSolenoid solenoids;
 
 	private Preferences prefs;
@@ -57,6 +59,7 @@ public class Knight extends IterativeRobot {
 	private StringData disp_message;
 	
 	public Knight() {
+		// get robot preferences, stored on the cRIO
 		prefs = Preferences.getInstance();
 		drive = new Drive(new Talon(prefs.getInt("leftmotor",leftMotor)),
 				new Talon(prefs.getInt("rightmotor",rightMotor)));
@@ -166,7 +169,7 @@ public class Knight extends IterativeRobot {
 
 		if (usingCheesy) {
 			drive.cheesyDrive(rightStickY, leftStickX, xbox.isPressed(JStick.XBOX_LJ));
-			lcd.println(DriverStationLCD.Line.kUser4,1,"cheesy      ");
+			lcd.println(DriverStationLCD.Line.kUser4,1,"cheesy drive");
 		} else {
 			if (!drive.straightDrive(xbox.getAxis(JStick.XBOX_TRIG))) {
 				drive.tankDrive(leftStickY, rightStickY);
