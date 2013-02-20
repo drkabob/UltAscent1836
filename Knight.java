@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
@@ -49,6 +48,7 @@ public class Knight extends IterativeRobot {
 	private SpeedController shooter;
 	private SpeedController intake;
 	private SpeedController actuator;
+	private SpeedController elevator;
 
 	// stuff for the InsightLT display
 	private InsightLT display;
@@ -57,14 +57,13 @@ public class Knight extends IterativeRobot {
 	
 	public Knight() {
 		// get robot preferences, stored on the cRIO
-		drive = new Drive(new Talon(prefs.getInt("leftmotor",5)),
-				new Talon(prefs.getInt("rightmotor",8)));
+		drive = new Drive(new Talon(prefs.getInt("leftmotor",4)),
+				new Talon(prefs.getInt("rightmotor",9)));
 
-		shooter = new TalonTriple(prefs.getInt("shootera", 1),
-				prefs.getInt("shooterb", 2),
-				prefs.getInt("shooterc", 3));
-		intake = new Talon(prefs.getInt("intake",4));
-		actuator = new Talon(prefs.getInt("actuator", 6));
+		shooter = new Talon(prefs.getInt("shooter", 6));
+		intake = new Talon(prefs.getInt("intake", 1));
+		actuator = new Talon(prefs.getInt("actuator", 2));
+		elevator = new Talon(prefs.getInt("elevator", 3));
 
 		xbox = new JStick(1);
 		atk = new JStick(2);
@@ -151,8 +150,14 @@ public class Knight extends IterativeRobot {
 			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is running");
 		}
 
-		// joystick button 2 controls intake
-		intake.set(atk.isPressed(2) ? 1 : 0);
+		// joystick button 2 controls intake and elevator
+		if (atk.isPressed(2)) {
+			intake.set(1);
+			elevator.set(1);
+		} else {
+			intake.set(0);
+			elevator.set(0);
+		}
 
 		// joystick button 3 should spin the shooter
 		shooter.set(atk.isPressed(3) ? 1 : 0);
