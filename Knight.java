@@ -42,7 +42,8 @@ public class Knight extends IterativeRobot {
 	// solenoids in "forward" means low gear
 	private DoubleSolenoid solenoids;
 	
-	public final static PrefsHelper prefs = new PrefsHelper();
+	//public final static PrefsHelper prefs = new PrefsHelper();
+    public static PrefsHelper prefs;
 	
 	private Drive drive;
 	private SpeedController shooter;
@@ -56,6 +57,8 @@ public class Knight extends IterativeRobot {
 	private StringData disp_message;
 	
 	public Knight() {
+        prefs = new PrefsHelper();
+        
 		// get robot preferences, stored on the cRIO
 		drive = new Drive(new Talon(prefs.getInt("leftmotor",4)),
 				new Talon(prefs.getInt("rightmotor",9)));
