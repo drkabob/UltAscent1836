@@ -127,6 +127,7 @@ public class Knight extends IterativeRobot {
      */
     public void teleopPeriodic() {
 		xbox.update();
+		atk.update();
 		
 		// Press A to toggle cheesy drive
 		if (xbox.isReleased(JStick.XBOX_A)) {
@@ -170,7 +171,7 @@ public class Knight extends IterativeRobot {
 		}
 
 		// joystick button 3 should spin the shooter
-		shooter.set(atk.isPressed(3) ? 1 : 0);
+		shooter.set(atk.isPressed(3) ? -1 : 0);
 
 		// joystick trigger should spin actuator,
 		// but only if the shooter is moving
