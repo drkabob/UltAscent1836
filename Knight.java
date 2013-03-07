@@ -125,7 +125,8 @@ public class Knight extends IterativeRobot {
     double integral_err;
     double prev_err;
     public void autonomousPeriodic() {
-		drive.tankDrive(0.4, 0.4);
+                actuator.set(1);
+		//drive.tankDrive(0.4, 0.4);
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("autonomous");
     }
