@@ -125,7 +125,7 @@ public class Knight extends IterativeRobot {
     double integral_err;
     double prev_err;
     public void autonomousPeriodic() {
-                actuator.set(1);
+		actuator.set(1);
 		//drive.tankDrive(0.4, 0.4);
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("autonomous");
@@ -180,13 +180,13 @@ public class Knight extends IterativeRobot {
 		}
 
 		// joystick button 3 should spin the shooter
-                if(atk.isPressed(3)) {
-                    shooter.set(-1);
-                    kicker.set(-1);
-                } else {
-                    shooter.set(0);
-                    kicker.set(0);
-                }
+		if (atk.isPressed(3)) {
+			shooter.set(-1);
+			kicker.set(-1);
+		} else {
+			shooter.set(0);
+			kicker.set(0);
+		}
 
 		// joystick trigger should spin actuator,
 		// but only if the shooter is moving
