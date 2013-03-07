@@ -83,7 +83,7 @@ public class Knight extends IterativeRobot {
         compressor = new Compressor(1,1);
 		solenoids = new DoubleSolenoid(1,2);
 
-		shooterEnc = new Encoder(1,2);
+		shooterEnc = new Encoder(8,2);
 
 		// configure the display to have two lines of text
 		display = new InsightLT(InsightLT.TWO_ONE_LINE_ZONES);
