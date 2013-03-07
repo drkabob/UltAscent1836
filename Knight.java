@@ -52,6 +52,7 @@ public class Knight extends IterativeRobot {
 	private SpeedController intake;
 	private SpeedController actuator;
 	private SpeedController elevator;
+	private SpeedController kicker;
 
 	private Counter shooterEnc;
 	private Encoder lWheels;
@@ -71,8 +72,9 @@ public class Knight extends IterativeRobot {
 
 		shooter = new Talon(prefs.getInt("shooter", 6));
 		intake = new Talon(prefs.getInt("intake", 2));
-		actuator = new Talon(prefs.getInt("actuator", 5));
+		actuator = new Talon(prefs.getInt("actuator", 1));
 		elevator = new Talon(prefs.getInt("elevator", 3));
+		kicker = new Talon(prefs.getInt("kicker",5));
 
 		xbox = new JStick(1);
 		atk = new JStick(2);
@@ -178,6 +180,7 @@ public class Knight extends IterativeRobot {
 
 		// joystick button 3 should spin the shooter
 		shooter.set(atk.isPressed(3) ? -1 : 0);
+		kicker.set(atk.isPressed(3) ? 1: 0);
 
 		// joystick trigger should spin actuator,
 		// but only if the shooter is moving
