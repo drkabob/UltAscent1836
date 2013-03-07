@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -51,6 +52,8 @@ public class Knight extends IterativeRobot {
 	private SpeedController actuator;
 	private SpeedController elevator;
 
+	private Encoder shooterEnc;
+
 	// stuff for the InsightLT display
 	private InsightLT display;
 	private DecimalData disp_batteryVoltage;
@@ -80,6 +83,8 @@ public class Knight extends IterativeRobot {
         compressor = new Compressor(1,1);
 		solenoids = new DoubleSolenoid(1,2);
 
+		shooterEnc = new Encoder(1,2);
+
 		// configure the display to have two lines of text
 		display = new InsightLT(InsightLT.TWO_ONE_LINE_ZONES);
 		display.startDisplay();
@@ -102,6 +107,8 @@ public class Knight extends IterativeRobot {
 		solenoids.set(DoubleSolenoid.Value.kReverse);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft,true);
+
+		shooterEnc.start();
     }
 
     /**
@@ -184,6 +191,8 @@ public class Knight extends IterativeRobot {
 				lcd.println(DriverStationLCD.Line.kUser4,1,"straightDrive");
 			}
 		}
+
+		lcd.println(DriverStationLCD.Line.kUser2,1,""+shooterEnc.get());
 		
 		lcd.updateLCD();
 
