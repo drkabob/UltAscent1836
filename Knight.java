@@ -13,6 +13,7 @@ import com.milkenknights.InsightLT.InsightLT;
 import com.milkenknights.InsightLT.StringData;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
@@ -52,7 +53,9 @@ public class Knight extends IterativeRobot {
 	private SpeedController actuator;
 	private SpeedController elevator;
 
-	private Encoder shooterEnc;
+	private Counter shooterEnc;
+	private Encoder lWheels;
+	private Encoder rWheels;
 
 	// stuff for the InsightLT display
 	private InsightLT display;
@@ -80,10 +83,13 @@ public class Knight extends IterativeRobot {
 		integral_err = 0;
 		prev_err = 0;
 
-        compressor = new Compressor(1,1);
+		// pressure sensor is  3
+        compressor = new Compressor(5,1);
 		solenoids = new DoubleSolenoid(1,2);
-
-		shooterEnc = new Encoder(8,2);
+		
+		shooterEnc = new Counter(1);
+		lWheels = new Encoder(3,4);
+		rWheels = new Encoder(6,7);
 
 		// configure the display to have two lines of text
 		display = new InsightLT(InsightLT.TWO_ONE_LINE_ZONES);
@@ -192,8 +198,10 @@ public class Knight extends IterativeRobot {
 				lcd.println(DriverStationLCD.Line.kUser4,1,"straightDrive");
 			}
 		}
-
+		
+		// print encoder values to see if they're working
 		lcd.println(DriverStationLCD.Line.kUser2,1,""+shooterEnc.get());
+		lcd.println(DriverStationLCD.Line.kUser5, 1,""+lWheels.get()+" "+rWheels.get());
 		
 		lcd.updateLCD();
 
