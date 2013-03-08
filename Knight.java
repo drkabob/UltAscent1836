@@ -43,7 +43,7 @@ public class Knight extends IterativeRobot {
 	private Compressor compressor;
 	// solenoids in "reverse" means high gear,
 	// solenoids in "forward" means low gear
-	private DoubleSolenoid solenoids;
+	private DoubleSolenoid driveGear;
 	
 	//public final static PrefsHelper prefs = new PrefsHelper();
     public static PrefsHelper prefs;
@@ -90,7 +90,7 @@ public class Knight extends IterativeRobot {
 
 		// pressure sensor is  3
         compressor = new Compressor(5,1);
-		solenoids = new DoubleSolenoid(1,2);
+		driveGear = new DoubleSolenoid(1,2);
 		
 		shooterEnc = new Counter(1);
 		lWheels = new Encoder(3,4);
@@ -115,7 +115,7 @@ public class Knight extends IterativeRobot {
      */
     public void robotInit() {
 		compressor.start();
-		solenoids.set(DoubleSolenoid.Value.kReverse);
+		driveGear.set(DoubleSolenoid.Value.kReverse);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft,true);
 
@@ -148,15 +148,15 @@ public class Knight extends IterativeRobot {
 
 		// use LB to toggle high and low gear
 		if (xbox.isReleased(JStick.XBOX_LB)) {
-			if(solenoids.get().value == DoubleSolenoid.Value.kForward_val) {
-				solenoids.set(DoubleSolenoid.Value.kReverse);
+			if(driveGear.get().value == DoubleSolenoid.Value.kForward_val) {
+				driveGear.set(DoubleSolenoid.Value.kReverse);
 			} else {
-				solenoids.set(DoubleSolenoid.Value.kForward);
+				driveGear.set(DoubleSolenoid.Value.kForward);
 			}
 		}
 
 		// show the solenoids status
-		switch (solenoids.get().value) {
+		switch (driveGear.get().value) {
 		case DoubleSolenoid.Value.kForward_val:
 			lcd.println(DriverStationLCD.Line.kUser3,1,"Low Gear ");
 			break;
