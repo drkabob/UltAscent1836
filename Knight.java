@@ -183,9 +183,16 @@ public class Knight extends IterativeRobot {
 		}
 
 		// joystick button 3 should spin the shooter
+		// but the kicker shouldn't run unless the
+		// shooter is at full speed
 		if (atk.isPressed(3)) {
 			shooter.set(-1);
-			kicker.set(-1);
+			// replace the 0.001 with the actual speed
+			if (shooterEnc.getPeriod() < 0.001) {
+				kicker.set(-1);
+			} else {
+				kicker.set(0);
+			}
 		} else {
 			shooter.set(0);
 			kicker.set(0);
