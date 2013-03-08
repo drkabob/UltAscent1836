@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -123,18 +124,34 @@ public class Knight extends IterativeRobot {
 
 		shooterEnc.start();
     }
+	//This function is called at the start of autonomous
+	Timer timer;
 
-    /**
-     * This function is called periodically during autonomous
-     */
-    double integral_err;
-    double prev_err;
-    public void autonomousPeriodic() {
-		actuator.set(1);
+	public void autonomousInit() {
+		kicker.set(-1.0);
+		timer.start();
+	}
+	/**
+	 * This function is called periodically during autonomous
+	 */
+	double integral_err;
+	double prev_err;
+	double last_timer;
+
+	public void autonomousPeriodic() {
 		//drive.tankDrive(0.4, 0.4);
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("autonomous");
-    }
+
+		if (timer.get() > 2) {
+			shooter.set(-1);
+		}
+		if (timer.get() > 6) {
+			actuator.set(1);
+		}
+		lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
+		lcd.updateLCD();
+	}
 
     /**
      * This function is called periodically during operator control
