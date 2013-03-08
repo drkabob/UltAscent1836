@@ -65,8 +65,6 @@ public class Knight extends IterativeRobot {
 	private DecimalData disp_batteryVoltage;
 	private StringData disp_message;
 	
-	private SmartDashboard smartDashboard;
-	
 	public Knight() {
         prefs = new PrefsHelper();
         
@@ -235,7 +233,7 @@ public class Knight extends IterativeRobot {
 		lcd.println(DriverStationLCD.Line.kUser2,1,""+shooterEnc.getPeriod());
 		lcd.println(DriverStationLCD.Line.kUser5, 1,""+lWheels.get()+" "+rWheels.get());
 		
-		smartDashboard.putNumber("Shooter speed", shooterEnc.getPeriod());
+		SmartDashboard.putNumber("Shooter speed", shooterEnc.getPeriod());
 		
 		lcd.updateLCD();
 
