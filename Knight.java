@@ -246,12 +246,53 @@ public class Knight extends IterativeRobot {
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("disabled");
 	}
-    
-    /**
-     * This function is called periodically during test mode
-     */
-    public void testPeriodic() {
-    
-    }
-    
+
+	private boolean shootTester;
+	public void testInit() {
+		timer.start();
+	}	
+
+	/**
+	 * This function is called periodically during test mode
+	 */
+	public void testPeriodic() {
+		xbox.update();
+		atk.update();
+
+		if (xbox.isReleased(JStick.XBOX_A)) {
+				shootTester = !shootTester;
+				lcd.println(DriverStationLCD.Line.kUser1, 1, "Shooter Tester     ");
+			} else {
+				lcd.println(DriverStationLCD.Line.kUser1, 1, "Normal Tester      ");
+		}
+
+		//Only spins shooter	
+		shooter.set((atk.isPressed(7)) ? -1 : 0);
+		kicker.set((atk.isPressed(6)) ? -1 : 0);
+		//Slow start for shooting 1
+		if(shootTester && atk.isPressed(1)) {
+			if(timer.get() > 2) {
+				shooter.set(1);
+				lcd.println(DriverStationLCD.Line.kUser2, 1, "Shooter: On    ");
+			}
+			if(timer.get() > 4) {
+				kicker.set(1);	
+				lcd.println(DriverStationLCD.Line.kUser3, 1, "Kicker: On     ");
+			}
+			if(timer.get() > 7) {
+				//actuator.set(1);	
+				lcd.println(DriverStationLCD.Line.kUser4, 1, "CAM: On        ");
+			} else {
+				timer.reset();
+				shooter.set(0);
+				kicker.set(0);
+				actuator.set(0);
+				lcd.println(DriverStationLCD.Line.kUser2, 1, "Shooter: Off       ");
+				lcd.println(DriverStationLCD.Line.kUser3, 1, "Kicker: Off        ");
+				lcd.println(DriverStationLCD.Line.kUser4, 1, "CAM: Off           ");
+			}
+		}
+		lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
+		lcd.updateLCD();
+	}
 }
