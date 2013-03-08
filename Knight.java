@@ -44,6 +44,7 @@ public class Knight extends IterativeRobot {
 	// solenoids in "reverse" means high gear,
 	// solenoids in "forward" means low gear
 	private DoubleSolenoid driveGear;
+	private DoubleSolenoid ingestSolenoids;
 	
 	//public final static PrefsHelper prefs = new PrefsHelper();
     public static PrefsHelper prefs;
@@ -91,6 +92,7 @@ public class Knight extends IterativeRobot {
 		// pressure sensor is  3
         compressor = new Compressor(5,1);
 		driveGear = new DoubleSolenoid(1,2);
+		ingestSolenoids = new DoubleSolenoid(3,4);
 		
 		shooterEnc = new Counter(1);
 		lWheels = new Encoder(3,4);
@@ -116,6 +118,8 @@ public class Knight extends IterativeRobot {
     public void robotInit() {
 		compressor.start();
 		driveGear.set(DoubleSolenoid.Value.kReverse);
+		ingestSolenoids.set(DoubleSolenoid.Value.kReverse);
+
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft,true);
 
@@ -196,6 +200,15 @@ public class Knight extends IterativeRobot {
 		} else {
 			shooter.set(0);
 			kicker.set(0);
+		}
+
+		// hold down xbox button B to use the ingestor
+		if (xbox.isPressed(JStick.XBOX_B)) {
+			ingestSolenoids.set(DoubleSolenoid.Value.kForward);
+			intake.set(1);
+		} else {
+			ingestSolenoids.set(DoubleSolenoid.Value.kReverse);
+			intake.set(0);
 		}
 
 		// joystick trigger should spin actuator,
