@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -62,6 +63,8 @@ public class Knight extends IterativeRobot {
 	private InsightLT display;
 	private DecimalData disp_batteryVoltage;
 	private StringData disp_message;
+	
+	private SmartDashboard smartDashboard;
 	
 	public Knight() {
         prefs = new PrefsHelper();
@@ -209,8 +212,10 @@ public class Knight extends IterativeRobot {
 		}
 		
 		// print encoder values to see if they're working
-		lcd.println(DriverStationLCD.Line.kUser2,1,""+shooterEnc.get());
+		lcd.println(DriverStationLCD.Line.kUser2,1,""+shooterEnc.getPeriod());
 		lcd.println(DriverStationLCD.Line.kUser5, 1,""+lWheels.get()+" "+rWheels.get());
+		
+		smartDashboard.putNumber("Shooter speed", shooterEnc.getPeriod());
 		
 		lcd.updateLCD();
 
