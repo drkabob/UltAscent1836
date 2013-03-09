@@ -285,6 +285,7 @@ public class Knight extends IterativeRobot {
 
 		//Only spins shooter	
 		shooter.set((atk.isPressed(7)) ? -1 : 0);
+		//Only spins the kicker
 		kicker.set((atk.isPressed(6)) ? -1 : 0);
 		//Slow start for shooting 1
 		if(shootTester && atk.isPressed(1)) {
@@ -304,9 +305,9 @@ public class Knight extends IterativeRobot {
 				shooter.set(0);
 				kicker.set(0);
 				actuator.set(0);
-				lcd.println(DriverStationLCD.Line.kUser2, 1, "Shooter: Off       ");
-				lcd.println(DriverStationLCD.Line.kUser3, 1, "Kicker: Off        ");
-				lcd.println(DriverStationLCD.Line.kUser4, 1, "CAM: Off           ");
+				lcd.println(DriverStationLCD.Line.kUser2, 1, "Shooter: Off   ");
+				lcd.println(DriverStationLCD.Line.kUser3, 1, "Kicker: Off    ");
+				lcd.println(DriverStationLCD.Line.kUser4, 1, "CAM: Off       ");
 			}
 		}
 		lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
