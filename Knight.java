@@ -192,43 +192,32 @@ public class Knight extends IterativeRobot {
 			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is running");
 		}
 
-		// joystick button 2 controls intake and elevator
-		if (atk.isPressed(2)) {
-			intake.set(1);
-			elevator.set(1);
-		} else {
-			intake.set(0);
-			elevator.set(0);
-		}
-
-		// joystick button 3 should spin the shooter
-		// but the kicker shouldn't run unless the
+		// joystick button 1 should spin the shooter and kicker
+		// but the actuator shouldn't run unless the
 		// shooter is at full speed
-		if (atk.isPressed(3)) {
+		if (atk.isPressed(1)) {
 			shooter.set(-1);
+			kicker.set(-1);
 			// replace the 0.001 with the actual speed
 			if (shooterEnc.getPeriod() < 0.001) {
-				kicker.set(-1);
+				actuator.set(1);
 			} else {
-				kicker.set(0);
+				actuator.set(0);
 			}
 		} else {
 			shooter.set(0);
 			kicker.set(0);
+			actuator.set(0);
 		}
 
-		// hold down xbox button B to use the ingestor
-		if (xbox.isPressed(JStick.XBOX_B)) {
+		// hold down atk 2 to use the ingestor
+		if (atk.isPressed(2)) {
 			ingestSolenoids.set(DoubleSolenoid.Value.kForward);
 			intake.set(1);
 		} else {
 			ingestSolenoids.set(DoubleSolenoid.Value.kReverse);
 			intake.set(0);
 		}
-
-		// joystick trigger should spin actuator,
-		// but only if the shooter is moving
-		actuator.set((atk.isPressed(3) && atk.isPressed(1)) ? 1 : 0);
 		
 		double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), jitterRange);
 		double leftStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSY), jitterRange);
