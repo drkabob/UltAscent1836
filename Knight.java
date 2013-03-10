@@ -14,7 +14,6 @@ import com.milkenknights.InsightLT.StringData;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.Encoder;
@@ -42,10 +41,12 @@ public class Knight extends IterativeRobot {
 	private DriverStationLCD lcd;
     
 	private Compressor compressor;
-	// solenoids in "reverse" means high gear,
-	// solenoids in "forward" means low gear
-	private DoubleSolenoid driveGear;
-	private DoubleSolenoid ingestSolenoids;
+
+	// Pair state "true" means high gear,
+	// Pair state "false" means low gear
+	private SolenoidPair driveGear;
+
+	private SolenoidPair ingestSolenoids;
 	
 	//public final static PrefsHelper prefs = new PrefsHelper();
     public static PrefsHelper prefs;
@@ -88,8 +89,8 @@ public class Knight extends IterativeRobot {
 
 		// pressure sensor is  3
         compressor = new Compressor(5,1);
-		driveGear = new DoubleSolenoid(1,2);
-		ingestSolenoids = new DoubleSolenoid(3,4);
+		driveGear = new SolenoidXORPair(2,1);
+		ingestSolenoids = new SolenoidXANDPair(3,4);
 		
 		shooterEnc = new Counter(1);
 		lWheels = new Encoder(3,4);
@@ -114,8 +115,7 @@ public class Knight extends IterativeRobot {
      */
     public void robotInit() {
 		compressor.start();
-		driveGear.set(DoubleSolenoid.Value.kReverse);
-		ingestSolenoids.set(DoubleSolenoid.Value.kReverse);
+		driveGear.set(true);
 
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft,true);
@@ -165,23 +165,11 @@ public class Knight extends IterativeRobot {
 
 		// use LB to toggle high and low gear
 		if (xbox.isReleased(JStick.XBOX_LB)) {
-			if(driveGear.get().value == DoubleSolenoid.Value.kForward_val) {
-				driveGear.set(DoubleSolenoid.Value.kReverse);
-			} else {
-				driveGear.set(DoubleSolenoid.Value.kForward);
-			}
+			driveGear.toggle();
 		}
 
 		// show the solenoids status
-		switch (driveGear.get().value) {
-		case DoubleSolenoid.Value.kForward_val:
-			lcd.println(DriverStationLCD.Line.kUser3,1,"Low Gear ");
-			break;
-			
-		case DoubleSolenoid.Value.kReverse_val:
-			lcd.println(DriverStationLCD.Line.kUser3,1,"High Gear");
-			break;
-		}
+		lcd.println(DriverStationLCD.Line.kUser3,1,driveGear.get()?"High Gear":"Low Gear ");
 
 		// show if the compressor is running
 		if (compressor.getPressureSwitchValue()) {
@@ -221,13 +209,8 @@ public class Knight extends IterativeRobot {
 
 
 		// hold down atk 2 to use the ingestor
-		if (atk.isPressed(2)) {
-			ingestSolenoids.set(DoubleSolenoid.Value.kForward);
-			intake.set(1);
-		} else {
-			ingestSolenoids.set(DoubleSolenoid.Value.kReverse);
-			intake.set(0);
-		}
+		ingestSolenoids.set(atk.isPressed(2));
+		intake.set(atk.isPressed(2) ? 1 : 0);
 		
 		double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), jitterRange);
 		double leftStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSY), jitterRange);
