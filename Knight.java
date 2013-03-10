@@ -279,7 +279,7 @@ public class Knight extends IterativeRobot {
 		if (pwmtest) {
 			for (int i = 0; i < 10; ++i) {
 				if (atk.isPressed(i+1)) {
-					pwms[i].setRaw(255);
+					pwms[i].setRaw(143);
 				}
 			}
 		} else {
