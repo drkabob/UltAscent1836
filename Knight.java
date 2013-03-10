@@ -192,6 +192,8 @@ public class Knight extends IterativeRobot {
 			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is running");
 		}
 
+		/*
+		// Old control system
 		// joystick button 1 should spin the shooter and kicker
 		// but the actuator shouldn't run unless the
 		// shooter is at full speed
@@ -209,6 +211,16 @@ public class Knight extends IterativeRobot {
 			kicker.set(0);
 			actuator.set(0);
 		}
+		*/
+
+		// New control system
+		// joystick button 1 spins the actuator
+		// joystick button 2 spins the shooter and kicker
+		// this control system does not use the optical encoders
+		actuator.set(atk.isPressed(1) ? 1 : 0);
+		shooter.set(atk.isPressed(2) ? -1 : 0);
+		kicker.set(atk.isPressed(2) ? -1 : 0);
+
 
 		// hold down atk 2 to use the ingestor
 		if (atk.isPressed(2)) {
