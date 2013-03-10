@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.SafePWM;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
@@ -247,8 +248,17 @@ public class Knight extends IterativeRobot {
 	}
 
 	private boolean shootTester;
+
+	private boolean pwmtest;
+	private SafePWM[] pwms;
+
 	public void testInit() {
 		timer.start();
+		pwmtest = false;
+		pwms = new SafePWM[10];
+		for (int i = 0; i < 10; ++i) {
+			pwms[i] = new SafePWM(i+1);
+		}
 	}	
 
 	/**
@@ -258,41 +268,57 @@ public class Knight extends IterativeRobot {
 		xbox.update();
 		atk.update();
 
-		if (xbox.isReleased(JStick.XBOX_A)) {
-				shootTester = !shootTester;
-				lcd.println(DriverStationLCD.Line.kUser1, 1, "Shooter Tester     ");
-			} else {
-				lcd.println(DriverStationLCD.Line.kUser1, 1, "Normal Tester      ");
+		// toggle between PWM test and austin's thing
+		if (xbox.isPressed(JStick.XBOX_LB)) {
+			pwmtest = false;
+		}
+		if (xbox.isPressed(JStick.XBOX_RB)) {
+			pwmtest = true;
 		}
 
-		//Only spins shooter	
-		shooter.set((atk.isPressed(7)) ? -1 : 0);
-		//Only spins the kicker
-		kicker.set((atk.isPressed(6)) ? -1 : 0);
-		//Slow start for shooting 1
-		if(shootTester && atk.isPressed(1)) {
-			if(timer.get() > 2) {
-				shooter.set(1);
-				lcd.println(DriverStationLCD.Line.kUser2, 1, "Shooter: On    ");
+		if (pwmtest) {
+			for (int i = 0; i < 10; ++i) {
+				if (atk.isPressed(i+1)) {
+					pwms[i].setRaw(255);
+				}
 			}
-			if(timer.get() > 4) {
-				kicker.set(1);	
-				lcd.println(DriverStationLCD.Line.kUser3, 1, "Kicker: On     ");
+		} else {
+			if (xbox.isReleased(JStick.XBOX_A)) {
+					shootTester = !shootTester;
+					lcd.println(DriverStationLCD.Line.kUser1, 1, "Shooter Tester     ");
+				} else {
+					lcd.println(DriverStationLCD.Line.kUser1, 1, "Normal Tester      ");
 			}
-			if(timer.get() > 7) {
-				//actuator.set(1);	
-				lcd.println(DriverStationLCD.Line.kUser4, 1, "CAM: On        ");
-			} else {
-				timer.reset();
-				shooter.set(0);
-				kicker.set(0);
-				actuator.set(0);
-				lcd.println(DriverStationLCD.Line.kUser2, 1, "Shooter: Off   ");
-				lcd.println(DriverStationLCD.Line.kUser3, 1, "Kicker: Off    ");
-				lcd.println(DriverStationLCD.Line.kUser4, 1, "CAM: Off       ");
+
+			//Only spins shooter	
+			shooter.set((atk.isPressed(7)) ? -1 : 0);
+			//Only spins the kicker
+			kicker.set((atk.isPressed(6)) ? -1 : 0);
+			//Slow start for shooting 1
+			if(shootTester && atk.isPressed(1)) {
+				if(timer.get() > 2) {
+					shooter.set(1);
+					lcd.println(DriverStationLCD.Line.kUser2, 1, "Shooter: On    ");
+				}
+				if(timer.get() > 4) {
+					kicker.set(1);	
+					lcd.println(DriverStationLCD.Line.kUser3, 1, "Kicker: On     ");
+				}
+				if(timer.get() > 7) {
+					//actuator.set(1);	
+					lcd.println(DriverStationLCD.Line.kUser4, 1, "CAM: On        ");
+				} else {
+					timer.reset();
+					shooter.set(0);
+					kicker.set(0);
+					actuator.set(0);
+					lcd.println(DriverStationLCD.Line.kUser2, 1, "Shooter: Off   ");
+					lcd.println(DriverStationLCD.Line.kUser3, 1, "Kicker: Off    ");
+					lcd.println(DriverStationLCD.Line.kUser4, 1, "CAM: Off       ");
+				}
 			}
+			lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
+			lcd.updateLCD();
 		}
-		lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
-		lcd.updateLCD();
 	}
 }
