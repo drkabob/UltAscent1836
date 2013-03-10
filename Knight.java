@@ -54,7 +54,6 @@ public class Knight extends IterativeRobot {
 	private SpeedController shooter;
 	private SpeedController intake;
 	private SpeedController actuator;
-	private SpeedController elevator;
 	private SpeedController kicker;
 
 	private Counter shooterEnc;
@@ -76,7 +75,6 @@ public class Knight extends IterativeRobot {
 		shooter = new Talon(prefs.getInt("shooter", 6));
 		intake = new Talon(prefs.getInt("intake", 2));
 		actuator = new Talon(prefs.getInt("actuator", 1));
-		elevator = new Talon(prefs.getInt("elevator", 3));
 		kicker = new Talon(prefs.getInt("kicker",5));
 
 		xbox = new JStick(1);
