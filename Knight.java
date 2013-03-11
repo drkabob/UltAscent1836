@@ -142,11 +142,11 @@ public class Knight extends IterativeRobot {
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("autonomous");
 
-		if (timer.get() > 2) {
+		if (timer.get() > 1000) {
 			shooter.set(-1);
 		}
-		if (timer.get() > 6) {
-			actuator.set(1);
+		if (timer.get() > 6000) {
+			actuator.set(0.4);
 		}
 		lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
 		lcd.updateLCD();
