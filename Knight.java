@@ -206,6 +206,7 @@ public class Knight extends IterativeRobot {
 		// use LB to toggle high and low gear
 		if (xbox.isReleased(JStick.XBOX_LB)) {
 			driveGear.toggle();
+			normalGear = !normalGear;
 		}
 
 		// show the solenoids status
@@ -265,12 +266,19 @@ public class Knight extends IterativeRobot {
 		double rightStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSX), JITTER_RANGE);
 		double rightStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSY), JITTER_RANGE);
 
+		boolean slowMode = xbox.getAxis(JStick.XBOX_TRIG) < -0.5;
+		if (slowMode) {
+			driveGear.set(false);
+		} else {
+			driveGear.set(normalGear);
+		}
+
 		if (usingCheesy) {
-			drive.cheesyDrive(leftStickY, rightStickX, xbox.isPressed(JStick.XBOX_LJ));
+			drive.cheesyDrive(leftStickY*(slowMode?0.6:1), rightStickX, xbox.isPressed(JStick.XBOX_LJ));
 			lcd.println(DriverStationLCD.Line.kUser4,1,"cheesy drive");
 		} else {
 			if (!drive.straightDrive(xbox.getAxis(JStick.XBOX_TRIG))) {
-				drive.tankDrive(leftStickY, rightStickY);
+				drive.tankDrive(leftStickY*(slowMode?0.6:1), rightStickY*(slowMode?0.6:1));
 				lcd.println(DriverStationLCD.Line.kUser4,1,"tank drive   ");
 			} else {
 				lcd.println(DriverStationLCD.Line.kUser4,1,"straightDrive");
