@@ -47,6 +47,10 @@ public class Knight extends IterativeRobot {
 	// Pair state "false" means low gear
 	private SolenoidPair driveGear;
 
+	// used to remember the gear that is being used
+	// while in and out of slow mode
+	private boolean normalGear;
+
 	private SolenoidPair ingestSolenoids;
 	
 	//public final static PrefsHelper prefs = new PrefsHelper();
@@ -91,6 +95,7 @@ public class Knight extends IterativeRobot {
 		// pressure sensor is  3
         compressor = new Compressor(5,1);
 		driveGear = new SolenoidXORPair(1,2);
+		normalGear = driveGear.get();
 		ingestSolenoids = new SolenoidXANDPair(3,4);
 		
 		shooterEnc = new Counter(1);
@@ -141,12 +146,11 @@ public class Knight extends IterativeRobot {
 	double prev_err;
 	double last_timer;
 	boolean frisbeeDone;
-	final double WAIT_AFTER_ACTUATOR = 3;
+	final double WAIT_AFTER_ACTUATOR = 5;
 	final double DELAY_BETWEEN_FRISBEES = 1;
 	final double FRISBEE_SHOOT_TIME = 0.5;
 
 	public void autonomousPeriodic() {
-		SmartDashboard.putNumber("time",Timer.getFPGATimestamp());
 		/*
 		//drive.tankDrive(0.4, 0.4);
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
@@ -166,7 +170,9 @@ public class Knight extends IterativeRobot {
 			actuator.set(1);
 		}
 		double currentTime = Timer.getFPGATimestamp() - autonStart - WAIT_AFTER_ACTUATOR;
-		double cycleTime = currentTime - WAIT_AFTER_ACTUATOR + (frisbeesThrown*DELAY_BETWEEN_FRISBEES);
+		double cycleTime = currentTime - WAIT_AFTER_ACTUATOR - (frisbeesThrown*DELAY_BETWEEN_FRISBEES);
+		SmartDashboard.putNumber("current time", currentTime);
+		SmartDashboard.putNumber("cycle time", cycleTime);
 		if (cycleTime > 0) {
 			if (cycleTime < FRISBEE_SHOOT_TIME) {
 				frisbeeDone = false;
@@ -178,7 +184,11 @@ public class Knight extends IterativeRobot {
 					actuator.set(0);
 				}
 			}
+		} else {
+			actuator.set(0);
 		}
+		SmartDashboard.putBoolean("Frisbee done",frisbeeDone);
+		SmartDashboard.putNumber("Frisbees thrown",frisbeesThrown);
 	}
 
     /**
