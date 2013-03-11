@@ -228,10 +228,11 @@ public class Knight extends IterativeRobot {
 		
 		double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), JITTER_RANGE);
 		double leftStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSY), JITTER_RANGE);
+		double rightStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSX), JITTER_RANGE);
 		double rightStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSY), JITTER_RANGE);
 
 		if (usingCheesy) {
-			drive.cheesyDrive(rightStickY, leftStickX, xbox.isPressed(JStick.XBOX_LJ));
+			drive.cheesyDrive(leftStickY, rightStickX, xbox.isPressed(JStick.XBOX_LJ));
 			lcd.println(DriverStationLCD.Line.kUser4,1,"cheesy drive");
 		} else {
 			if (!drive.straightDrive(xbox.getAxis(JStick.XBOX_TRIG))) {
