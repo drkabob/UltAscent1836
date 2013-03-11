@@ -1,0 +1,48 @@
+Driver station LCD:
+1 
+2 Shooter encoder
+3 Drive gear status
+4 Tank drive or cheesy drive?
+5 Wheel encoders
+6 Compresor status
+
+Xbox Controller:
+A Ingestor and toggle cheesy
+B 
+LB Toggle high/low gear
+RB 
+LJ (in cheesy drive) quickturn
+RJ 
+
+Logitech ATK3:
+1 Actuator
+2 Shooter and kicker
+
+PWM slots:
+1 Actuator
+2 
+3 
+4 Left motor
+5 Kicker
+6 Shooter
+7 
+8 Intake
+9 Right motor
+10 
+
+Module channels:
+1 Drive high gear
+2 Drive low gear
+3 Ingestor solenoid A
+4 Ingestor solenoid B
+5 Compressor pressure switch
+
+Digital input (?)
+1 Compressor relay channel
+2 
+3 Left encoder A
+4 Left encoder B
+5 
+6 Right encoder A
+7 Right encoder B
+
