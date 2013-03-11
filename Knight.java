@@ -127,12 +127,12 @@ public class Knight extends IterativeRobot {
 	Timer timer;
 
 	double autonStart;
+	int frisbeesThrown;
 	public void autonomousInit() {
-		/*
-		kicker.set(-1.0);
-		timer.start();
-		*/
+		shooter.set(1);
+		kicker.set(-1);
 		autonStart = Timer.getFPGATimestamp();
+		frisbeesThrown = 0;
 	}
 	/**
 	 * This function is called periodically during autonomous
@@ -140,6 +140,10 @@ public class Knight extends IterativeRobot {
 	double integral_err;
 	double prev_err;
 	double last_timer;
+	boolean frisbeeDone;
+	final double WAIT_AFTER_ACTUATOR = 3;
+	final double DELAY_BETWEEN_FRISBEES = 1;
+	final double FRISBEE_SHOOT_TIME = 0.5;
 
 	public void autonomousPeriodic() {
 		SmartDashboard.putNumber("time",Timer.getFPGATimestamp());
@@ -157,13 +161,23 @@ public class Knight extends IterativeRobot {
 		lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
 		lcd.updateLCD();
 		*/
-
-		if (Timer.getFPGATimestamp() - autonStart > 1) {
-			shooter.set(1);
-			kicker.set(-1);
-		}
-		if (Timer.getFPGATimestamp() - autonStart > 6) {
+		
+		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
 			actuator.set(1);
+		}
+		double currentTime = Timer.getFPGATimestamp() - autonStart - WAIT_AFTER_ACTUATOR;
+		double cycleTime = currentTime - WAIT_AFTER_ACTUATOR + (frisbeesThrown*DELAY_BETWEEN_FRISBEES);
+		if (cycleTime > 0) {
+			if (cycleTime < FRISBEE_SHOOT_TIME) {
+				frisbeeDone = false;
+				actuator.set(1);
+			} else {
+				if (!frisbeeDone) {
+					frisbeeDone = true;
+					frisbeesThrown++;
+					actuator.set(0);
+				}
+			}
 		}
 	}
 
@@ -236,7 +250,7 @@ public class Knight extends IterativeRobot {
 			intake.set(0);
 		}
 		
-		double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), JITTER_RANGE);
+		//double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), JITTER_RANGE);
 		double leftStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSY), JITTER_RANGE);
 		double rightStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSX), JITTER_RANGE);
 		double rightStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSY), JITTER_RANGE);
