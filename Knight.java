@@ -163,7 +163,7 @@ public class Knight extends IterativeRobot {
 			kicker.set(-1);
 		}
 		if (Timer.getFPGATimestamp() - autonStart > 6) {
-			actuator.set(0.4);
+			actuator.set(1);
 		}
 	}
 
