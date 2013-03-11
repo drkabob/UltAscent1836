@@ -75,7 +75,7 @@ public class Knight extends IterativeRobot {
 				new Talon(prefs.getInt("rightmotor",9)));
 
 		shooter = new Talon(prefs.getInt("shooter", 6));
-		intake = new Talon(prefs.getInt("intake", 2));
+		intake = new Talon(prefs.getInt("intake", 8));
 		actuator = new Talon(prefs.getInt("actuator", 1));
 		kicker = new Talon(prefs.getInt("kicker",5));
 
@@ -84,7 +84,7 @@ public class Knight extends IterativeRobot {
 
 		lcd = DriverStationLCD.getInstance();
 
-		usingCheesy = false;
+		usingCheesy = true;
 		integral_err = 0;
 		prev_err = 0;
 
