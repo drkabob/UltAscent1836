@@ -7,10 +7,10 @@ Driver station LCD:
 6 Compresor status
 
 Xbox Controller:
-A Ingestor and toggle cheesy
+A toggle cheesy
 B 
 LB Toggle high/low gear
-RB 
+RB Ingestor
 LJ (in cheesy drive) quickturn
 RJ 
 

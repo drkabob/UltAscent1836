@@ -210,7 +210,7 @@ public class Knight extends IterativeRobot {
 		// joystick button 2 spins the shooter and kicker
 		// this control system does not use the optical encoders
 		actuator.set(atk.isPressed(1) ? 1 : 0);
-		shooter.set(atk.isPressed(2) ? -1 : 0);
+		shooter.set(atk.isPressed(2) ? 1 : 0);
 		kicker.set(atk.isPressed(2) ? -1 : 0);
 
 
@@ -218,9 +218,9 @@ public class Knight extends IterativeRobot {
 		//ingestSolenoids.set(atk.isPressed(2));
 		//intake.set(atk.isPressed(2) ? 1 : 0);
 
-		if (xbox.isPressed(JStick.XBOX_A)) {
+		if (xbox.isPressed(JStick.XBOX_RB)) {
 			ingestSolenoids.set(true);
-			intake.set(1);
+			intake.set(-1);
 		} else {
 			ingestSolenoids.set(false);
 			intake.set(0);
