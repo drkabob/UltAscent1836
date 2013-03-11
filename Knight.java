@@ -90,7 +90,7 @@ public class Knight extends IterativeRobot {
 
 		// pressure sensor is  3
         compressor = new Compressor(5,1);
-		driveGear = new SolenoidXORPair(2,1);
+		driveGear = new SolenoidXORPair(1,2);
 		ingestSolenoids = new SolenoidXANDPair(3,4);
 		
 		shooterEnc = new Counter(1);
@@ -126,11 +126,13 @@ public class Knight extends IterativeRobot {
 	//This function is called at the start of autonomous
 	Timer timer;
 
+	double autonStart;
 	public void autonomousInit() {
 		/*
 		kicker.set(-1.0);
 		timer.start();
 		*/
+		autonStart = Timer.getFPGATimestamp();
 	}
 	/**
 	 * This function is called periodically during autonomous
@@ -155,6 +157,14 @@ public class Knight extends IterativeRobot {
 		lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
 		lcd.updateLCD();
 		*/
+
+		if (Timer.getFPGATimestamp() - autonStart > 1) {
+			shooter.set(1);
+			kicker.set(-1);
+		}
+		if (Timer.getFPGATimestamp() - autonStart > 6) {
+			actuator.set(0.4);
+		}
 	}
 
     /**
