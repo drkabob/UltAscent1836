@@ -32,8 +32,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Knight extends IterativeRobot {	
-	private static final double jitterRange = 0.008;
+public class Knight extends IterativeRobot {
+	private static final double JITTER_RANGE = 0.008;
 	
 	JStick xbox; // XBox controller
 	JStick atk; // Logitech ATK3 controller
@@ -210,12 +210,20 @@ public class Knight extends IterativeRobot {
 
 
 		// hold down atk 2 to use the ingestor
-		ingestSolenoids.set(atk.isPressed(2));
-		intake.set(atk.isPressed(2) ? 1 : 0);
+		//ingestSolenoids.set(atk.isPressed(2));
+		//intake.set(atk.isPressed(2) ? 1 : 0);
+
+		if (xbox.isPressed(JStick.XBOX_A)) {
+			ingestSolenoids.set(true);
+			intake.set(1);
+		} else {
+			ingestSolenoids.set(false);
+			intake.set(0);
+		}
 		
-		double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), jitterRange);
-		double leftStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSY), jitterRange);
-		double rightStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSY), jitterRange);
+		double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), JITTER_RANGE);
+		double leftStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSY), JITTER_RANGE);
+		double rightStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSY), JITTER_RANGE);
 
 		if (usingCheesy) {
 			drive.cheesyDrive(rightStickY, leftStickX, xbox.isPressed(JStick.XBOX_LJ));
