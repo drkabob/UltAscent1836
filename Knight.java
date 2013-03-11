@@ -127,8 +127,10 @@ public class Knight extends IterativeRobot {
 	Timer timer;
 
 	public void autonomousInit() {
+		/*
 		kicker.set(-1.0);
 		timer.start();
+		*/
 	}
 	/**
 	 * This function is called periodically during autonomous
@@ -138,6 +140,8 @@ public class Knight extends IterativeRobot {
 	double last_timer;
 
 	public void autonomousPeriodic() {
+		SmartDashboard.putNumber("time",Timer.getFPGATimestamp());
+		/*
 		//drive.tankDrive(0.4, 0.4);
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("autonomous");
@@ -150,6 +154,7 @@ public class Knight extends IterativeRobot {
 		}
 		lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
 		lcd.updateLCD();
+		*/
 	}
 
     /**
