@@ -166,9 +166,6 @@ public class Knight extends IterativeRobot {
 		lcd.updateLCD();
 		*/
 		
-		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
-			actuator.set(1);
-		}
 		double currentTime = Timer.getFPGATimestamp() - autonStart - WAIT_AFTER_ACTUATOR;
 		double cycleTime = currentTime - WAIT_AFTER_ACTUATOR - (frisbeesThrown*DELAY_BETWEEN_FRISBEES);
 		SmartDashboard.putNumber("current time", currentTime);
