@@ -138,6 +138,7 @@ public class Knight extends IterativeRobot {
 		kicker.set(-1);
 		autonStart = Timer.getFPGATimestamp();
 		frisbeesThrown = 0;
+		driveGear.set(true);
 	}
 	/**
 	 * This function is called periodically during autonomous
@@ -150,7 +151,7 @@ public class Knight extends IterativeRobot {
 	final double DELAY_BETWEEN_FRISBEES = 1;
 	final double FRISBEE_SHOOT_TIME = 0.5;
 
-	final double DRIVE_FORWARD_TIME = 3;
+	final double DRIVE_FORWARD_TIME = 2;
 
 	public void autonomousPeriodic() {
 		/*
@@ -168,7 +169,7 @@ public class Knight extends IterativeRobot {
 		lcd.updateLCD();
 		*/
 		
-		double currentTime = Timer.getFPGATimestamp() - autonStart - WAIT_AFTER_ACTUATOR;
+		double currentTime = Timer.getFPGATimestamp() - autonStart;
 		/*
 		double cycleTime = currentTime - WAIT_AFTER_ACTUATOR - (frisbeesThrown*DELAY_BETWEEN_FRISBEES);
 		SmartDashboard.putNumber("current time", currentTime);
@@ -194,8 +195,8 @@ public class Knight extends IterativeRobot {
 		if (currentTime < DRIVE_FORWARD_TIME) {
 			drive.tankDrive(0.4,0.4);
 		} else {
-			drive.tankDrive(0.4,0.4);
-			actuator.set(0);
+			drive.tankDrive(0,0);
+			actuator.set(1);
 		}
 	}
 
