@@ -146,7 +146,7 @@ public class Knight extends IterativeRobot {
 	double last_timer;
 	boolean frisbeeDone;
 	final double WAIT_AFTER_ACTUATOR = 5;
-	final double DELAY_BETWEEN_FRISBEES = 1;
+	final double DELAY_BETWEEN_FRISBEES = 2.25;
 	final double FRISBEE_SHOOT_TIME = 0.25;
 
 	final double DRIVE_FORWARD_TIME = 2;
