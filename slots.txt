@@ -10,13 +10,15 @@ Xbox Controller:
 A toggle cheesy
 B 
 LB Toggle high/low gear
-RB Ingestor
+RB Toggle hook climb
 LJ (in cheesy drive) quickturn
 RJ 
+Trigger: slow mode
 
 Logitech ATK3:
 1 Actuator
 2 Shooter and kicker
+3 Reverse shooter and kicker
 
 PWM slots:
 1 Actuator
@@ -33,8 +35,8 @@ PWM slots:
 Module channels:
 1 Drive high gear
 2 Drive low gear
-3 Ingestor solenoid A
-4 Ingestor solenoid B
+3 Climb solenoid A
+4 Climb solenoid B
 5 Compressor pressure switch
 
 Digital input (?)

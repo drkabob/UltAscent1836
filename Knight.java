@@ -255,6 +255,10 @@ public class Knight extends IterativeRobot {
 		shooter.set(atk.isPressed(2) ? 1 : 0);
 		kicker.set(atk.isPressed(2) ? 1 : 0);
 
+		// joystick button 3 reverses shooter asnd kicker
+		shooter.set(atk.isPressed(3) ? -1 : 0);
+		kicker.set(atk.isPressed(3) ? -1 : 0);
+
 
 		// toggle the hook climb
 		if (xbox.isReleased(JStick.XBOX_RB)) {
