@@ -200,19 +200,10 @@ public class Knight extends IterativeRobot {
 		*/
 	}
 
-	private static final int UNLEASH_HOOK_TIME = 115;
-	private double teleopStart;
-	public void teleopInit() {
-		teleopStart = Timer.getFPGATimestamp();
-		hookClimb.set(false);
-	}
-
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-		double currentTime = Timer.getFPGATimestamp() - teleopStart;
-
 		xbox.update();
 		atk.update();
 		
@@ -267,9 +258,9 @@ public class Knight extends IterativeRobot {
 		kicker.set(atk.isPressed(2) ? 1 : 0);
 
 
-		// Automatically use the hook climber before the match ends
-		if (currentTime >= UNLEASH_HOOK_TIME) {
-			hookClimb.set(true);
+		// toggle the hook climb
+		if (xbox.isReleased(JStick.XBOX_RB)) {
+			hookClimb.toggle();
 		}
 
 		//double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), JITTER_RANGE);
