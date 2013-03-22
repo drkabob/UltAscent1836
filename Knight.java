@@ -135,7 +135,7 @@ public class Knight extends IterativeRobot {
 	int frisbeesThrown;
 	public void autonomousInit() {
 		shooter.set(1);
-		kicker.set(-1);
+		kicker.set(1);
 		autonStart = Timer.getFPGATimestamp();
 		frisbeesThrown = 0;
 		driveGear.set(true);
@@ -192,12 +192,14 @@ public class Knight extends IterativeRobot {
 		SmartDashboard.putNumber("Frisbees thrown",frisbeesThrown);
 		*/
 
+		/*
 		if (currentTime < DRIVE_FORWARD_TIME) {
 			drive.tankDrive(0.4,0.4);
 		} else {
 			drive.tankDrive(0,0);
 			actuator.set(1);
 		}
+		*/
 	}
 
     /**
@@ -255,7 +257,7 @@ public class Knight extends IterativeRobot {
 		// this control system does not use the optical encoders
 		actuator.set(atk.isPressed(1) ? 1 : 0);
 		shooter.set(atk.isPressed(2) ? 1 : 0);
-		kicker.set(atk.isPressed(2) ? -1 : 0);
+		kicker.set(atk.isPressed(2) ? 1 : 0);
 
 
 		// hold down atk 2 to use the ingestor
@@ -358,7 +360,7 @@ public class Knight extends IterativeRobot {
 			//Only spins shooter	
 			shooter.set((atk.isPressed(7)) ? -1 : 0);
 			//Only spins the kicker
-			kicker.set((atk.isPressed(6)) ? -1 : 0);
+			kicker.set((atk.isPressed(6)) ? 1 : 0);
 			//Slow start for shooting 1
 			if(shootTester && atk.isPressed(1)) {
 				if(timer.get() > 2) {
