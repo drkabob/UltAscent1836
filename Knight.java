@@ -51,14 +51,13 @@ public class Knight extends IterativeRobot {
 	// while in and out of slow mode
 	private boolean normalGear;
 
-	private SolenoidPair ingestSolenoids;
+	private SolenoidPair hookClimb;
 	
 	//public final static PrefsHelper prefs = new PrefsHelper();
     public static PrefsHelper prefs;
 	
 	private Drive drive;
 	private SpeedController shooter;
-	private SpeedController intake;
 	private SpeedController actuator;
 	private SpeedController kicker;
 
@@ -79,7 +78,6 @@ public class Knight extends IterativeRobot {
 				new Talon(prefs.getInt("rightmotor",9)));
 
 		shooter = new Talon(prefs.getInt("shooter", 6));
-		intake = new Talon(prefs.getInt("intake", 8));
 		actuator = new Talon(prefs.getInt("actuator", 1));
 		kicker = new Talon(prefs.getInt("kicker",5));
 
@@ -96,7 +94,7 @@ public class Knight extends IterativeRobot {
         compressor = new Compressor(5,1);
 		driveGear = new SolenoidXORPair(1,2);
 		normalGear = driveGear.get();
-		ingestSolenoids = new SolenoidXANDPair(3,4);
+		hookClimb = new SolenoidXANDPair(3,4);
 		
 		shooterEnc = new Counter(1);
 		lWheels = new Encoder(3,4);
@@ -169,7 +167,7 @@ public class Knight extends IterativeRobot {
 		lcd.updateLCD();
 		*/
 		
-		double currentTime = Timer.getFPGATimestamp() - autonStart;
+		//double currentTime = Timer.getFPGATimestamp() - autonStart;
 		/*
 		double cycleTime = currentTime - WAIT_AFTER_ACTUATOR - (frisbeesThrown*DELAY_BETWEEN_FRISBEES);
 		SmartDashboard.putNumber("current time", currentTime);
@@ -202,10 +200,19 @@ public class Knight extends IterativeRobot {
 		*/
 	}
 
+	private static final int UNLEASH_HOOK_TIME = 115;
+	private double teleopStart;
+	public void teleopInit() {
+		teleopStart = Timer.getFPGATimestamp();
+		hookClimb.set(false);
+	}
+
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+		double currentTime = Timer.getFPGATimestamp() - teleopStart;
+
 		xbox.update();
 		atk.update();
 		
@@ -260,18 +267,11 @@ public class Knight extends IterativeRobot {
 		kicker.set(atk.isPressed(2) ? 1 : 0);
 
 
-		// hold down atk 2 to use the ingestor
-		//ingestSolenoids.set(atk.isPressed(2));
-		//intake.set(atk.isPressed(2) ? 1 : 0);
-
-		if (xbox.isPressed(JStick.XBOX_RB)) {
-			ingestSolenoids.set(true);
-			intake.set(-1);
-		} else {
-			ingestSolenoids.set(false);
-			intake.set(0);
+		// Automatically use the hook climber before the match ends
+		if (currentTime >= UNLEASH_HOOK_TIME) {
+			hookClimb.set(true);
 		}
-		
+
 		//double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), JITTER_RANGE);
 		double leftStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSY), JITTER_RANGE);
 		double rightStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSX), JITTER_RANGE);
