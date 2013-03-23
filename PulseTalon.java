@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 // this implementation is BAD!
 // TODO: use threads
+// TODO: extend SpeedController
 public class PulseTalon {
 	private Talon t;
 	private double pulseTime, delay;

@@ -58,7 +58,7 @@ public class Knight extends IterativeRobot {
 	
 	private Drive drive;
 	private SpeedController shooter;
-	private SpeedController actuator;
+	private PulseTalon actuator;
 	private SpeedController kicker;
 
 	private Counter shooterEnc;
@@ -78,7 +78,7 @@ public class Knight extends IterativeRobot {
 				new Talon(prefs.getInt("rightmotor",9)));
 
 		shooter = new Talon(prefs.getInt("shooter", 6));
-		actuator = new Talon(prefs.getInt("actuator", 1));
+		actuator = new PulseTalon(prefs.getInt("actuator", 1),0.25,2);
 		kicker = new Talon(prefs.getInt("kicker",5));
 
 		xbox = new JStick(1);
@@ -167,6 +167,7 @@ public class Knight extends IterativeRobot {
 		lcd.updateLCD();
 		*/
 		
+		/*
 		double currentTime = Timer.getFPGATimestamp() - autonStart;
 		double cycleTime = currentTime - WAIT_AFTER_ACTUATOR - (frisbeesThrown*DELAY_BETWEEN_FRISBEES);
 		SmartDashboard.putNumber("current time", currentTime);
@@ -187,7 +188,7 @@ public class Knight extends IterativeRobot {
 		}
 		SmartDashboard.putBoolean("Frisbee done",frisbeeDone);
 		SmartDashboard.putNumber("Frisbees thrown",frisbeesThrown);
-
+		*/
 		/*
 		if (currentTime < DRIVE_FORWARD_TIME) {
 			drive.tankDrive(0.4,0.4);
@@ -196,6 +197,10 @@ public class Knight extends IterativeRobot {
 			actuator.set(1);
 		}
 		*/
+		
+		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
+			actuator.set(1);
+		}
 	}
 
     /**
