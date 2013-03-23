@@ -78,7 +78,7 @@ public class Knight extends IterativeRobot {
 				new Talon(prefs.getInt("rightmotor",9)));
 
 		shooter = new Talon(prefs.getInt("shooter", 6));
-		actuator = new PulseTalon(prefs.getInt("actuator", 1),0.25,2);
+		actuator = new PulseTalon(prefs.getInt("actuator", 1),0.22,1.75);
 		kicker = new Talon(prefs.getInt("kicker",5));
 
 		xbox = new JStick(1);
