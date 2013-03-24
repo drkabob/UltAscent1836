@@ -132,8 +132,8 @@ public class Knight extends IterativeRobot {
 	double autonStart;
 	int frisbeesThrown;
 	public void autonomousInit() {
-		shooter.set(1);
-		kicker.set(1);
+		shooter.set(0.9);
+		kicker.set(0.9);
 		autonStart = Timer.getFPGATimestamp();
 		frisbeesThrown = 0;
 		driveGear.set(true);
