@@ -245,12 +245,11 @@ public class Knight extends IterativeRobot {
 		actuator.set(atk.isPressed(1) ? 1 : 0);
 
 		double shooterOutput = 0;
+		double desiredRPM = 3000;
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
-			if(atk.isPressed(2)) {
-				shooterOutput = 12.5 / DriverStation.getInstance().getBatteryVoltage();
-			}
+			shooterOutput = atk.isPressed(2) ? 12.5 / DriverStation.getInstance().getBatteryVoltage() : 0;
 		} else if (shooterMode == SHOOTER_BANG_BANG) {
-			// TODO: bang bang
+			// shooterOutput = atk.isPressed(2) ? Utils.getBangBang(desiredRPM, 0.3, null) : 0;
 		} else if (shooterMode == SHOOTER_PID) {
 			// TODO: shooter PID
 		}
