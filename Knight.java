@@ -61,6 +61,11 @@ public class Knight extends IterativeRobot {
 	private PulseTalon actuator;
 	private SpeedController kicker;
 
+	private static final int SHOOTER_MODE_VOLTAGE = 0;
+	private static final int SHOOTER_BANG_BANG = 1;
+	private static final int SHOOTER_PID = 2;
+	private int shooterMode;
+	
 	private Counter shooterEnc;
 	private Encoder lWheels;
 	private Encoder rWheels;
@@ -69,7 +74,7 @@ public class Knight extends IterativeRobot {
 	private InsightLT display;
 	private DecimalData disp_batteryVoltage;
 	private StringData disp_message;
-	
+
 	public Knight() {
         prefs = new PrefsHelper();
         
@@ -80,6 +85,8 @@ public class Knight extends IterativeRobot {
 		shooter = new Talon(prefs.getInt("shooter", 6));
 		actuator = new PulseTalon(prefs.getInt("actuator", 1),0.22,1.75);
 		kicker = new Talon(prefs.getInt("kicker",5));
+
+		shooterMode = SHOOTER_MODE_VOLTAGE;
 
 		xbox = new JStick(1);
 		atk = new JStick(2);
@@ -231,35 +238,25 @@ public class Knight extends IterativeRobot {
 			lcd.println(DriverStationLCD.Line.kUser6,1,"Compressor is running");
 		}
 
-		/*
-		// Old control system
-		// joystick button 1 should spin the shooter and kicker
-		// but the actuator shouldn't run unless the
-		// shooter is at full speed
-		if (atk.isPressed(1)) {
-			shooter.set(-1);
-			kicker.set(-1);
-			// replace the 0.001 with the actual speed
-			if (shooterEnc.getPeriod() < 0.001) {
-				actuator.set(1);
-			} else {
-				actuator.set(0);
-			}
-		} else {
-			shooter.set(0);
-			kicker.set(0);
-			actuator.set(0);
-		}
-		*/
-
-		// New control system
 		// joystick button 1 spins the actuator
 		// joystick button 2 spins the shooter and kicker
 		// joystick button 3 revereses the shooter and kicker
 		// this control system does not use the optical encoders
 		actuator.set(atk.isPressed(1) ? 1 : 0);
-		shooter.set(atk.isPressed(2) ? 1 : atk.isPressed(3) ? -1 : 0);
-		kicker.set(atk.isPressed(2) ? 1 : atk.isPressed(3) ? -1 : 0);
+
+		double shooterOutput = 0;
+		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
+			if(atk.isPressed(2)) {
+				shooterOutput = 12.5 / DriverStation.getInstance().getBatteryVoltage();
+			}
+		} else if (shooterMode == SHOOTER_BANG_BANG) {
+			// TODO: bang bang
+		} else if (shooterMode == SHOOTER_PID) {
+			// TODO: shooter PID
+		}
+
+		shooter.set(shooterOutput);
+		kicker.set(shooterOutput);
 
 		// toggle the hook climb
 		if (xbox.isReleased(JStick.XBOX_RB)) {
