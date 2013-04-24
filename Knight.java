@@ -12,6 +12,7 @@ import com.milkenknights.InsightLT.DecimalData;
 import com.milkenknights.InsightLT.InsightLT;
 import com.milkenknights.InsightLT.StringData;
 
+import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -83,7 +84,7 @@ public class Knight extends IterativeRobot {
 				new Talon(prefs.getInt("rightmotor",9)));
 
 		shooter = new Talon(prefs.getInt("shooter", 6));
-		actuator = new PulseTalon(prefs.getInt("actuator", 1),0.22,1.75);
+		actuator = new PulseTalon(prefs.getInt("actuator", 1),0.22,0.3);
 		kicker = new Talon(prefs.getInt("kicker",5));
 
 		shooterMode = SHOOTER_MODE_VOLTAGE;
@@ -104,6 +105,7 @@ public class Knight extends IterativeRobot {
 		hookClimb = new SolenoidXANDPair(3,4);
 		
 		shooterEnc = new Counter(1);
+		//shooterEnc = new Counter(new AnalogTrigger(1));
 		lWheels = new Encoder(3,4);
 		rWheels = new Encoder(6,7);
 
@@ -247,11 +249,11 @@ public class Knight extends IterativeRobot {
 		double shooterOutput = 0;
 		double desiredRPM = 3000;
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
-			shooterOutput = atk.isPressed(2) ? 12.5 / DriverStation.getInstance().getBatteryVoltage() : 0;
+			shooterOutput = atk.isPressed(2) ? (12.5*0.9) / DriverStation.getInstance().getBatteryVoltage() : 0;
 		} else if (shooterMode == SHOOTER_BANG_BANG) {
-			// shooterOutput = atk.isPressed(2) ? Utils.getBangBang(desiredRPM, 0.3, null) : 0;
+			shooterOutput = atk.isPressed(2) ? Utils.getBangBang(desiredRPM, 0.3, shooterEnc) : 0;
 		} else if (shooterMode == SHOOTER_PID) {
-			// TODO: shooter PID
+			// TO: shooter PID
 		}
 
 		shooter.set(shooterOutput);
@@ -291,6 +293,8 @@ public class Knight extends IterativeRobot {
 		lcd.println(DriverStationLCD.Line.kUser5, 1,""+lWheels.get()+" "+rWheels.get());
 		
 		SmartDashboard.putNumber("Shooter speed", shooterEnc.getPeriod());
+		SmartDashboard.putNumber("Shooter RPM", 60/shooterEnc.getPeriod());
+		SmartDashboard.putNumber("Shooter count", shooterEnc.get());
 		
 		lcd.updateLCD();
 
