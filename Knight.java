@@ -59,7 +59,7 @@ public class Knight extends IterativeRobot {
 	
 	private Drive drive;
 	private SpeedController shooter;
-	private PulseTalon actuator;
+	private Pulse actuator;
 	private SpeedController kicker;
 
 	private static final int SHOOTER_MODE_VOLTAGE = 0;
@@ -84,7 +84,7 @@ public class Knight extends IterativeRobot {
 				new Talon(prefs.getInt("rightmotor",9)));
 
 		shooter = new Talon(prefs.getInt("shooter", 6));
-		actuator = new PulseTalon(prefs.getInt("actuator", 1),0.22,0.3);
+		actuator = new Pulse(prefs.getInt("actuator", 1),0.22,0.3);
 		kicker = new Talon(prefs.getInt("kicker",5));
 
 		shooterMode = SHOOTER_MODE_VOLTAGE;
