@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj.Timer;
 // this implementation is BAD!
 // TODO: use threads
 // TODO: extend SpeedController
-public class Pulse {
+public class PulseDelay {
 	private Talon t;
 	private double pulseTime, delay;
 	private double lastShootTime;
 	private boolean isShooting;
 
-	public Pulse(int channel, double pulseTime, double delay) {
+	public PulseDelay(int channel, double pulseTime, double delay) {
 		t = new Talon(channel);
 		this.pulseTime = pulseTime;
 		this.delay = delay;
