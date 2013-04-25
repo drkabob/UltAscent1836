@@ -281,7 +281,14 @@ public class Knight extends IterativeRobot {
 		}
 		
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
-			defaultVoltageShooter(atk.isPressed(2));
+			if (atk.isPressed(2)) {
+				defaultVoltageShooter(true);
+			} else if (atk.isPressed(4) || atk.isPressed(5)) {
+				voltageShooter(true, 0.6);
+			} else {
+				shooterOff();
+			}
+			//defaultVoltageShooter(atk.isPressed(2));
 		} else if (shooterMode == SHOOTER_BANG_BANG) {
 			if (atk.isPressed(2)) {
 				bangBangShooter(true, 4000);
