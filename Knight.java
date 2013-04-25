@@ -95,6 +95,11 @@ public class Knight extends IterativeRobot {
 		shooter.set(shooterOutput);
 		kicker.set(shooterOutput);
 	}
+
+	private void shooterOff() {
+		shooter.set(0);
+		kicker.set(0);
+	}
 	
 	private void defaultActuator(boolean on) {
 		actuator.set(on ? 0.5 : 0);
@@ -276,18 +281,19 @@ public class Knight extends IterativeRobot {
 		}
 		
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
-			defaultVoltageShooter(true);
+			defaultVoltageShooter(atk.isPressed(2));
 		} else if (shooterMode == SHOOTER_BANG_BANG) {
 			if (atk.isPressed(2)) {
 				bangBangShooter(true, 4000);
 			} else if (atk.isPressed(4) || atk.isPressed(5)) {
 				bangBangShooter(true, 4500);
+			} else {
+				shooterOff();
 			}
 		} else if (shooterMode == SHOOTER_PID) {
 			// TO: shooter PID
 		} else {
-			shooter.set(0);
-			kicker.set(0);
+			shooterOff();
 		}
 
 		// toggle the hook climb
