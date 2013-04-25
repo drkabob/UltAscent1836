@@ -1,40 +1,37 @@
 package com.milkenknights;
 
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 
-// this implementation is BAD!
-// TODO: use threads
-// TODO: extend SpeedController
 public class Pulse {
-	private Talon t;
 	private double pulseTime, delay;
 	private double lastShootTime;
 	private boolean isShooting;
 
-	public Pulse(int channel, double pulseTime, double delay) {
-		t = new Talon(channel);
+	public Pulse(double pulseTime, double delay) {
 		this.pulseTime = pulseTime;
 		this.delay = delay;
 	}
 
-	public void set(double speed) {
-		if (speed == 0) {
+	public double getPulse(double desiredSpeed) {
+		if (desiredSpeed == 0) {
 			isShooting = false;
-			t.set(0);
+			return 0;
 		} else {
 			if (isShooting) {
 				if (Timer.getFPGATimestamp() - lastShootTime >= pulseTime + delay) {
 					lastShootTime = Timer.getFPGATimestamp();
 				} else if (Timer.getFPGATimestamp() - lastShootTime > pulseTime) {
-					t.set(0);
+					return 0;
 				} else {
-					t.set(speed);
+					return desiredSpeed;
 				}
 			} else {
 				isShooting = true;
 				lastShootTime = Timer.getFPGATimestamp();
 			}
 		}
+		// TODO: delete this return and make sure
+		// returns work everywhere
+		return desiredSpeed;
 	}
 }
