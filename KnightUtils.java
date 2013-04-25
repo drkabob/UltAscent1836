@@ -2,7 +2,7 @@ package com.milkenknights;
 
 import edu.wpi.first.wpilibj.CounterBase;
 
-public class Utils {
+public class KnightUtils {
 	public static double getBangBang(double targetRPM, double slowOutput, CounterBase source) {
 		return periodToRPM(source.getPeriod()) < targetRPM ? 1 : slowOutput;
 	}
