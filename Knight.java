@@ -12,7 +12,6 @@ import com.milkenknights.InsightLT.DecimalData;
 import com.milkenknights.InsightLT.InsightLT;
 import com.milkenknights.InsightLT.StringData;
 
-import edu.wpi.first.wpilibj.AnalogTrigger;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -85,9 +84,20 @@ public class Knight extends IterativeRobot {
 		shooter.set(output);
 		kicker.set(output);
 	}
+
+	private void bangBangShooter(boolean on, double targetRPM) {
+		double shooterOutput;
+		if (on) {
+			shooterOutput = Utils.periodToRPM(shooterEnc.getPeriod()) < targetRPM ? 1 : 0.5;
+		} else {
+			shooterOutput = 0;
+		}
+		shooter.set(shooterOutput);
+		kicker.set(shooterOutput);
+	}
 	
 	private void defaultActuator(boolean on) {
-		actuator.set(on ? 0.6 : 0);
+		actuator.set(on ? 0.5 : 0);
 	}
 
 	public Knight() {
@@ -221,9 +231,7 @@ public class Knight extends IterativeRobot {
 		}
 		*/
 		
-		shooter.set((12.5*0.75) / DriverStation.getInstance().getBatteryVoltage());
-		kicker.set((12.5*0.75) / DriverStation.getInstance().getBatteryVoltage());
-		
+		defaultVoltageShooter(true);
 		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
 		}
@@ -267,33 +275,17 @@ public class Knight extends IterativeRobot {
 			shooterMode = SHOOTER_BANG_BANG;
 		}
 		
-		double shooterOutput = 0;
-		double desiredRPM = 3000;
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
-			shooterOutput = atk.isPressed(2) ? (12.5*0.75) / DriverStation.getInstance().getBatteryVoltage() : 0;
+			defaultVoltageShooter(true);
 		} else if (shooterMode == SHOOTER_BANG_BANG) {
 			if (atk.isPressed(2)) {
-				// bang bang?
-				// TODO: put magic numbers somewhere else
-				if (Utils.periodToRPM(shooterEnc.getPeriod()) < 4000) {
-					shooterOutput = 1;
-				} else {
-					shooterOutput = 0.5;
-				}		
+				bangBangShooter(true, 4000);
 			} else if (atk.isPressed(4) || atk.isPressed(5)) {
-				if (Utils.periodToRPM(shooterEnc.getPeriod()) < 4500) {
-					shooterOutput = 1;
-				} else {
-					shooterOutput = 0.5;
-				}
+				bangBangShooter(true, 4500);
 			}
-			//shooterOutput = atk.isPressed(2) ? Utils.getBangBang(desiredRPM, 0.3, shooterEnc) : 0;
 		} else if (shooterMode == SHOOTER_PID) {
 			// TO: shooter PID
 		}
-
-		shooter.set(shooterOutput);
-		kicker.set(shooterOutput);
 
 		// toggle the hook climb
 		if (xbox.isReleased(JStick.XBOX_RB)) {
