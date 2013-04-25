@@ -76,7 +76,7 @@ public class Knight extends IterativeRobot {
 	private StringData disp_message;
 	
 	private void defaultVoltageShooter(boolean on) {
-		voltageShooter(on, 0.6);
+		voltageShooter(on, 0.65);
 	}
 	
 	private void voltageShooter(boolean on, double frac) {
@@ -116,7 +116,7 @@ public class Knight extends IterativeRobot {
 		actuator = new Talon(1);
 		kicker = new Talon(prefs.getInt("kicker",5));
 
-		shooterMode = SHOOTER_BANG_BANG;
+		shooterMode = SHOOTER_MODE_VOLTAGE;
 
 		xbox = new JStick(1);
 		atk = new JStick(2);
@@ -236,7 +236,7 @@ public class Knight extends IterativeRobot {
 		}
 		*/
 		
-		defaultVoltageShooter(true);
+		voltageShooter(true,0.6);
 		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
 		}
