@@ -59,7 +59,7 @@ public class Knight extends IterativeRobot {
 	
 	private Drive drive;
 	private SpeedController shooter;
-	private Pulse actuator;
+	private SpeedController actuator;
 	private SpeedController kicker;
 
 	private static final int SHOOTER_MODE_VOLTAGE = 0;
@@ -84,7 +84,8 @@ public class Knight extends IterativeRobot {
 				new Talon(prefs.getInt("rightmotor",9)));
 
 		shooter = new Talon(prefs.getInt("shooter", 6));
-		actuator = new Pulse(prefs.getInt("actuator", 1),0.22,0.3);
+		//actuator = new Pulse(prefs.getInt("actuator", 1),0.22,0.3);
+		actuator = new Talon(1);
 		kicker = new Talon(prefs.getInt("kicker",5));
 
 		shooterMode = SHOOTER_MODE_VOLTAGE;
@@ -244,14 +245,29 @@ public class Knight extends IterativeRobot {
 		// joystick button 2 spins the shooter and kicker
 		// joystick button 3 revereses the shooter and kicker
 		// this control system does not use the optical encoders
-		actuator.set(atk.isPressed(1) ? 1 : 0);
+		actuator.set(atk.isPressed(1) ? 0.5 : 0);
 
 		double shooterOutput = 0;
 		double desiredRPM = 3000;
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
 			shooterOutput = atk.isPressed(2) ? (12.5*0.9) / DriverStation.getInstance().getBatteryVoltage() : 0;
 		} else if (shooterMode == SHOOTER_BANG_BANG) {
-			shooterOutput = atk.isPressed(2) ? Utils.getBangBang(desiredRPM, 0.3, shooterEnc) : 0;
+			if (atk.isPressed(2)) {
+				// bang bang?
+				// TODO: put magic numbers somewhere else
+				if (Utils.periodToRPM(shooterEnc.getPeriod()) < 4000) {
+					shooterOutput = 1;
+				} else {
+					shooterOutput = 0.5;
+				}		
+			} else if (atk.isPressed(4) || atk.isPressed(5)) {
+				if (Utils.periodToRPM(shooterEnc.getPeriod()) < 4500) {
+					shooterOutput = 1;
+				} else {
+					shooterOutput = 0.5;
+				}
+			}
+			//shooterOutput = atk.isPressed(2) ? Utils.getBangBang(desiredRPM, 0.3, shooterEnc) : 0;
 		} else if (shooterMode == SHOOTER_PID) {
 			// TO: shooter PID
 		}
