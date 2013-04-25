@@ -285,6 +285,9 @@ public class Knight extends IterativeRobot {
 			}
 		} else if (shooterMode == SHOOTER_PID) {
 			// TO: shooter PID
+		} else {
+			shooter.set(0);
+			kicker.set(0);
 		}
 
 		// toggle the hook climb
