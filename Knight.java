@@ -63,6 +63,7 @@ public class Knight extends IterativeRobot {
 
 	private static final int SHOOTER_MODE_VOLTAGE = 0;
 	private static final int SHOOTER_BANG_BANG = 1;
+	private static final int SHOOTER_COMBINED = 3;
 	private static final int SHOOTER_PID = 2;
 	private int shooterMode;
 	
@@ -94,6 +95,14 @@ public class Knight extends IterativeRobot {
 		}
 		shooter.set(shooterOutput);
 		kicker.set(shooterOutput);
+	}
+	
+	private void combinedShooter(boolean on) {
+		if (on) {
+			// shooter gets bang bang at 3800
+			// kicker gets 80% voltage
+			//shooter.set(Utils.periodToRPM(periodInSeconds))
+		}
 	}
 
 	private void shooterOff() {
@@ -236,7 +245,8 @@ public class Knight extends IterativeRobot {
 		}
 		*/
 		
-		voltageShooter(true,0.6);
+		//voltageShooter(true,0.6);
+		bangBangShooter(true,3800);
 		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
 		}
@@ -293,7 +303,7 @@ public class Knight extends IterativeRobot {
 			if (atk.isPressed(2)) {
 				bangBangShooter(true, 4000);
 			} else if (atk.isPressed(4) || atk.isPressed(5)) {
-				bangBangShooter(true, 4500);
+				bangBangShooter(true, 3800);
 			} else {
 				shooterOff();
 			}
