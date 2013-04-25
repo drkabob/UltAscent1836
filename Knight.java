@@ -76,7 +76,7 @@ public class Knight extends IterativeRobot {
 	private StringData disp_message;
 	
 	private void defaultVoltageShooter(boolean on) {
-		voltageShooter(on, 0.7);
+		voltageShooter(on, 0.6);
 	}
 	
 	private void voltageShooter(boolean on, double frac) {
