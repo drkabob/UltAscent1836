@@ -1,5 +1,5 @@
 Driver station LCD:
-1 
+1 Shooter mode
 2 Shooter encoder
 3 Drive gear status
 4 Tank drive or cheesy drive?
@@ -19,6 +19,8 @@ Logitech ATK3:
 1 Actuator
 2 Shooter and kicker
 3 Reverse shooter and kicker
+10 Shooter mode to bang bang
+11 Shooter mode to voltage
 
 PWM slots:
 1 Actuator

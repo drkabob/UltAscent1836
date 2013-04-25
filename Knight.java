@@ -87,7 +87,7 @@ public class Knight extends IterativeRobot {
 		actuator = new Talon(1);
 		kicker = new Talon(prefs.getInt("kicker",5));
 
-		shooterMode = SHOOTER_MODE_VOLTAGE;
+		shooterMode = SHOOTER_BANG_BANG;
 
 		xbox = new JStick(1);
 		atk = new JStick(2);
@@ -141,8 +141,8 @@ public class Knight extends IterativeRobot {
 	double autonStart;
 	int frisbeesThrown;
 	public void autonomousInit() {
-		shooter.set(0.9);
-		kicker.set(0.9);
+		//shooter.set(0.9);
+		//kicker.set(0.9);
 		autonStart = Timer.getFPGATimestamp();
 		frisbeesThrown = 0;
 		driveGear.set(true);
@@ -207,8 +207,11 @@ public class Knight extends IterativeRobot {
 		}
 		*/
 		
+		shooter.set((12.5*0.75) / DriverStation.getInstance().getBatteryVoltage());
+		kicker.set((12.5*0.75) / DriverStation.getInstance().getBatteryVoltage());
+		
 		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
-			actuator.set(1);
+			actuator.set(0.6);
 		}
 	}
 
@@ -244,12 +247,19 @@ public class Knight extends IterativeRobot {
 		// joystick button 2 spins the shooter and kicker
 		// joystick button 3 revereses the shooter and kicker
 		// this control system does not use the optical encoders
-		actuator.set(atk.isPressed(1) ? 0.5 : 0);
-
+		actuator.set(atk.isPressed(1) ? 0.6 : 0);
+		
+		// change shooter modes
+		if (atk.isPressed(11)) {
+			shooterMode = SHOOTER_MODE_VOLTAGE;
+		} else if (atk.isPressed(10)) {
+			shooterMode = SHOOTER_BANG_BANG;
+		}
+		
 		double shooterOutput = 0;
 		double desiredRPM = 3000;
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
-			shooterOutput = atk.isPressed(2) ? (12.5*0.9) / DriverStation.getInstance().getBatteryVoltage() : 0;
+			shooterOutput = atk.isPressed(2) ? (12.5*0.75) / DriverStation.getInstance().getBatteryVoltage() : 0;
 		} else if (shooterMode == SHOOTER_BANG_BANG) {
 			if (atk.isPressed(2)) {
 				// bang bang?
@@ -301,6 +311,12 @@ public class Knight extends IterativeRobot {
 			} else {
 				lcd.println(DriverStationLCD.Line.kUser4,1,"straightDrive");
 			}
+		}
+		
+		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
+			lcd.println(DriverStationLCD.Line.kUser1,1,"Shooter mode: voltage ");
+		} else if (shooterMode == SHOOTER_BANG_BANG) {
+			lcd.println(DriverStationLCD.Line.kUser1,1,"Shooter mode: bangbang");
 		}
 		
 		// print encoder values to see if they're working
