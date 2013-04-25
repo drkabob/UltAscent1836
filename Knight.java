@@ -254,13 +254,13 @@ public class Knight extends IterativeRobot {
 			if (atk.isPressed(2)) {
 				// bang bang?
 				// TODO: put magic numbers somewhere else
-				if (KnightUtils.periodToRPM(shooterEnc.getPeriod()) < 4000) {
+				if (Utils.periodToRPM(shooterEnc.getPeriod()) < 4000) {
 					shooterOutput = 1;
 				} else {
 					shooterOutput = 0.5;
 				}		
 			} else if (atk.isPressed(4) || atk.isPressed(5)) {
-				if (KnightUtils.periodToRPM(shooterEnc.getPeriod()) < 4500) {
+				if (Utils.periodToRPM(shooterEnc.getPeriod()) < 4500) {
 					shooterOutput = 1;
 				} else {
 					shooterOutput = 0.5;

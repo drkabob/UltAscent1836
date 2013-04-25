@@ -2,12 +2,12 @@ package com.milkenknights;
 
 import edu.wpi.first.wpilibj.Timer;
 
-public class PulseDelay {
+public class Pulse {
 	private double pulseTime, delay;
 	private double lastShootTime;
 	private boolean isShooting;
 
-	public PulseDelay(double pulseTime, double delay) {
+	public Pulse(double pulseTime, double delay) {
 		this.pulseTime = pulseTime;
 		this.delay = delay;
 	}
