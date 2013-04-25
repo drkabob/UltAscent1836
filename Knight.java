@@ -247,7 +247,7 @@ public class Knight extends IterativeRobot {
 		// joystick button 2 spins the shooter and kicker
 		// joystick button 3 revereses the shooter and kicker
 		// this control system does not use the optical encoders
-		actuator.set(atk.isPressed(1) ? 0.6 : 0);
+		actuator.set(atk.isPressed(1) ? 0.5 : 0);
 		
 		// change shooter modes
 		if (atk.isPressed(11)) {
