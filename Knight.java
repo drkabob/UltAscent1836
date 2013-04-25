@@ -75,6 +75,20 @@ public class Knight extends IterativeRobot {
 	private InsightLT display;
 	private DecimalData disp_batteryVoltage;
 	private StringData disp_message;
+	
+	private void defaultVoltageShooter(boolean on) {
+		voltageShooter(on, 0.75);
+	}
+	
+	private void voltageShooter(boolean on, double frac) {
+		double output = on ? (12.5*frac) / DriverStation.getInstance().getBatteryVoltage() : 0;
+		shooter.set(output);
+		kicker.set(output);
+	}
+	
+	private void defaultActuator(boolean on) {
+		actuator.set(on ? 0.6 : 0);
+	}
 
 	public Knight() {
         prefs = new PrefsHelper();
@@ -211,7 +225,7 @@ public class Knight extends IterativeRobot {
 		kicker.set((12.5*0.75) / DriverStation.getInstance().getBatteryVoltage());
 		
 		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
-			actuator.set(0.6);
+			defaultActuator(true);
 		}
 	}
 
@@ -244,10 +258,7 @@ public class Knight extends IterativeRobot {
 		}
 
 		// joystick button 1 spins the actuator
-		// joystick button 2 spins the shooter and kicker
-		// joystick button 3 revereses the shooter and kicker
-		// this control system does not use the optical encoders
-		actuator.set(atk.isPressed(1) ? 0.6 : 0);
+		defaultActuator(atk.isPressed(1));
 		
 		// change shooter modes
 		if (atk.isPressed(11)) {
