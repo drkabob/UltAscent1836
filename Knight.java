@@ -63,8 +63,8 @@ public class Knight extends IterativeRobot {
 
 	private static final int SHOOTER_MODE_VOLTAGE = 0;
 	private static final int SHOOTER_BANG_BANG = 1;
-	private static final int SHOOTER_COMBINED = 3;
 	private static final int SHOOTER_PID = 2;
+	private static final int SHOOTER_COMBINED = 3;
 	private int shooterMode;
 	
 	private Counter shooterEnc;
@@ -81,7 +81,7 @@ public class Knight extends IterativeRobot {
 	}
 	
 	private void voltageShooter(boolean on, double frac) {
-		double output = on ? (12.5*frac) / DriverStation.getInstance().getBatteryVoltage() : 0;
+		double output = on ? Utils.voltageSpeed(frac) : 0;
 		shooter.set(output);
 		kicker.set(output);
 	}
@@ -89,7 +89,7 @@ public class Knight extends IterativeRobot {
 	private void bangBangShooter(boolean on, double targetRPM) {
 		double shooterOutput;
 		if (on) {
-			shooterOutput = Utils.periodToRPM(shooterEnc.getPeriod()) < targetRPM ? 1 : 0.5;
+			shooterOutput = Utils.getBangBang(targetRPM, 0.5, shooterEnc);
 		} else {
 			shooterOutput = 0;
 		}
@@ -101,7 +101,11 @@ public class Knight extends IterativeRobot {
 		if (on) {
 			// shooter gets bang bang at 3800
 			// kicker gets 80% voltage
-			//shooter.set(Utils.periodToRPM(periodInSeconds))
+			shooter.set(Utils.getBangBang(3800,0.5,shooterEnc));
+			kicker.set(Utils.voltageSpeed(0.8));
+		} else {
+			shooter.set(0);
+			kicker.set(0);
 		}
 	}
 
@@ -125,7 +129,8 @@ public class Knight extends IterativeRobot {
 		actuator = new Talon(1);
 		kicker = new Talon(prefs.getInt("kicker",5));
 
-		shooterMode = SHOOTER_MODE_VOLTAGE;
+		//shooterMode = SHOOTER_MODE_VOLTAGE;
+		shooterMode = SHOOTER_BANG_BANG;
 
 		xbox = new JStick(1);
 		atk = new JStick(2);
@@ -288,6 +293,8 @@ public class Knight extends IterativeRobot {
 			shooterMode = SHOOTER_MODE_VOLTAGE;
 		} else if (atk.isPressed(10)) {
 			shooterMode = SHOOTER_BANG_BANG;
+		} else if (atk.isPressed(9)) {
+			shooterMode = SHOOTER_COMBINED;
 		}
 		
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
@@ -309,6 +316,8 @@ public class Knight extends IterativeRobot {
 			}
 		} else if (shooterMode == SHOOTER_PID) {
 			// TO: shooter PID
+		} else if (shooterMode == SHOOTER_COMBINED) {
+			combinedShooter(atk.isPressed(2));
 		} else {
 			shooterOff();
 		}
