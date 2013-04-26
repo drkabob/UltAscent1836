@@ -47,6 +47,9 @@ public class Knight extends IterativeRobot {
 	private static final int HOOK_SOLENOID_B = 4;
 	private static final int SHOOTER_ENC = 1;
 	
+	private static final double SHOOTER_RPM_HIGH = 3800;
+	private static final double SHOOTER_RPM_LOW = 3500;
+	
 	JStick xbox; // XBox controller
 	JStick atk; // Logitech ATK3 controller
 
@@ -108,9 +111,9 @@ public class Knight extends IterativeRobot {
 	
 	private void combinedShooter(boolean on) {
 		if (on) {
-			// shooter gets bang bang at 3500
+			// shooter gets bang bang at the low speed
 			// kicker gets 80% voltage
-			shooter.set(Utils.getBangBang(3500,0.5,shooterEnc));
+			shooter.set(Utils.getBangBang(SHOOTER_RPM_LOW,0.5,shooterEnc));
 			kicker.set(Utils.voltageSpeed(0.8));
 		} else {
 			shooter.set(0);
@@ -254,7 +257,7 @@ public class Knight extends IterativeRobot {
 		*/
 		
 		//voltageShooter(true,0.6);
-		bangBangShooter(true,3800);
+		bangBangShooter(true,SHOOTER_RPM_HIGH);
 		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
 		}
@@ -311,9 +314,9 @@ public class Knight extends IterativeRobot {
 			//defaultVoltageShooter(atk.isPressed(2));
 		} else if (shooterMode == SHOOTER_BANG_BANG) {
 			if (atk.isPressed(2)) {
-				bangBangShooter(true, 3800);
+				bangBangShooter(true, SHOOTER_RPM_HIGH);
 			} else if (atk.isPressed(4) || atk.isPressed(5)) {
-				bangBangShooter(true, 3500);
+				bangBangShooter(true, SHOOTER_RPM_LOW);
 			} else {
 				shooterOff();
 			}
