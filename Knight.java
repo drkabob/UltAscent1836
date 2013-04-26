@@ -51,7 +51,7 @@ public class Knight extends IterativeRobot {
 	private static final double SLOW_MOD = 0.6;
 	
 	// For bang bang mode
-	private static final double SHOOTER_RPM_HIGH = 3800;
+	private static final double SHOOTER_RPM_HIGH = 3900;
 	private static final double SHOOTER_RPM_LOW = 3500;
 	
 	// For voltage mode
