@@ -7,16 +7,15 @@
 
 package com.milkenknights;
 
-
 import com.milkenknights.InsightLT.DecimalData;
 import com.milkenknights.InsightLT.InsightLT;
 import com.milkenknights.InsightLT.StringData;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SafePWM;
@@ -46,6 +45,7 @@ public class Knight extends IterativeRobot {
 	private static final int HOOK_SOLENOID_A = 3;
 	private static final int HOOK_SOLENOID_B = 4;
 	private static final int SHOOTER_ENC = 1;
+	private static final int AUTON_CHECK_DI = 14;
 	
 	// For slow mode
 	private static final double SLOW_MOD = 0.6;
@@ -89,6 +89,9 @@ public class Knight extends IterativeRobot {
 	private int shooterMode;
 	
 	private Counter shooterEnc;
+
+	// Used to determine which autonomous procedure to use
+	private DigitalInput autonCheck;
 
 	// stuff for the InsightLT display
 	private InsightLT display;
@@ -164,6 +167,8 @@ public class Knight extends IterativeRobot {
 		hookClimb = new SolenoidXANDPair(HOOK_SOLENOID_A,HOOK_SOLENOID_B);
 		
 		shooterEnc = new Counter(SHOOTER_ENC);
+
+		autonCheck = new DigitalInput(AUTON_CHECK_DI);
 
 		// configure the display to have two lines of text
 		display = new InsightLT(InsightLT.TWO_ONE_LINE_ZONES);
@@ -264,7 +269,7 @@ public class Knight extends IterativeRobot {
 		*/
 		
 		//voltageShooter(true,0.6);
-		bangBangShooter(true,SHOOTER_RPM_HIGH);
+		bangBangShooter(true,autonCheck.get() ? SHOOTER_RPM_HIGH : SHOOTER_RPM_LOW);
 		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
 		}
@@ -376,6 +381,8 @@ public class Knight extends IterativeRobot {
 		SmartDashboard.putNumber("Shooter speed", shooterEnc.getPeriod());
 		SmartDashboard.putNumber("Shooter RPM", 60/shooterEnc.getPeriod());
 		SmartDashboard.putNumber("Shooter count", shooterEnc.get());
+
+		SmartDashboard.putBoolean("Auton check", autonCheck.get());
 		
 		lcd.updateLCD();
 
