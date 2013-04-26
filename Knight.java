@@ -34,6 +34,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Knight extends IterativeRobot {
 	private static final double JITTER_RANGE = 0.008;
+	private static final int LEFT_MOTOR = 4;
+	private static final int RIGHT_MOTOR = 9;
+	private static final int SHOOTER_TALON = 6;
+	private static final int ACTUATOR_TALON = 1;
+	private static final int KICKER_TALON = 5;
+	private static final int COMPRESSOR_PRESSURE_SWITCH = 5;
+	private static final int COMPRESSOR_RELAY_CHANNEL = 1;
+	private static final int DRIVE_SOLENOID_A = 1;
+	private static final int DRIVE_SOLENOID_B = 2;
+	private static final int HOOK_SOLENOID_A = 3;
+	private static final int HOOK_SOLENOID_B = 4;
+	private static final int SHOOTER_ENC = 1;
 	
 	JStick xbox; // XBox controller
 	JStick atk; // Logitech ATK3 controller
@@ -122,12 +134,11 @@ public class Knight extends IterativeRobot {
         prefs = new PrefsHelper();
         
 		// get robot preferences, stored on the cRIO
-		drive = new Drive(new Talon(prefs.getInt("leftmotor",4)),
-				new Talon(prefs.getInt("rightmotor",9)));
+		drive = new Drive(LEFT_MOTOR, RIGHT_MOTOR);
 
-		shooter = new Talon(prefs.getInt("shooter", 6));
-		actuator = new Talon(1);
-		kicker = new Talon(prefs.getInt("kicker",5));
+		shooter = new Talon(SHOOTER_TALON);
+		actuator = new Talon(ACTUATOR_TALON);
+		kicker = new Talon(KICKER_TALON);
 
 		//shooterMode = SHOOTER_MODE_VOLTAGE;
 		shooterMode = SHOOTER_BANG_BANG;
@@ -142,15 +153,12 @@ public class Knight extends IterativeRobot {
 		prev_err = 0;
 
 		// pressure sensor is  3
-        compressor = new Compressor(5,1);
-		driveGear = new SolenoidXORPair(1,2);
+        compressor = new Compressor(COMPRESSOR_PRESSURE_SWITCH,COMPRESSOR_RELAY_CHANNEL);
+		driveGear = new SolenoidXORPair(DRIVE_SOLENOID_A,DRIVE_SOLENOID_B);
 		normalGear = driveGear.get();
-		hookClimb = new SolenoidXANDPair(3,4);
+		hookClimb = new SolenoidXANDPair(HOOK_SOLENOID_A,HOOK_SOLENOID_B);
 		
-		shooterEnc = new Counter(1);
-		//shooterEnc = new Counter(new AnalogTrigger(1));
-		lWheels = new Encoder(3,4);
-		rWheels = new Encoder(6,7);
+		shooterEnc = new Counter(SHOOTER_ENC);
 
 		// configure the display to have two lines of text
 		display = new InsightLT(InsightLT.TWO_ONE_LINE_ZONES);
