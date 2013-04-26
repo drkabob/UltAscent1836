@@ -13,7 +13,7 @@ public class Drive extends RobotDrive {
 	 * @param rightRate The movement speed of the right wheels
 	 */
 	public boolean straightDriveEnc(double power, double leftRate, double rightRate) {
-		double kp = Knight.prefs.getDouble("kp", 0.1); //the new line
+		double kp = 0.1; //the new line
 		if (power != 0) {
 			double lspeed, rspeed = 0;
 			

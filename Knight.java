@@ -65,9 +65,6 @@ public class Knight extends IterativeRobot {
 
 	private SolenoidPair hookClimb;
 	
-	//public final static PrefsHelper prefs = new PrefsHelper();
-    public static PrefsHelper prefs;
-	
 	private Drive drive;
 	private SpeedController shooter;
 	private SpeedController actuator;
@@ -131,8 +128,6 @@ public class Knight extends IterativeRobot {
 	}
 
 	public Knight() {
-        prefs = new PrefsHelper();
-        
 		// get robot preferences, stored on the cRIO
 		drive = new Drive(LEFT_MOTOR, RIGHT_MOTOR);
 
