@@ -99,9 +99,9 @@ public class Knight extends IterativeRobot {
 	
 	private void combinedShooter(boolean on) {
 		if (on) {
-			// shooter gets bang bang at 3800
+			// shooter gets bang bang at 3500
 			// kicker gets 80% voltage
-			shooter.set(Utils.getBangBang(3800,0.5,shooterEnc));
+			shooter.set(Utils.getBangBang(3500,0.5,shooterEnc));
 			kicker.set(Utils.voltageSpeed(0.8));
 		} else {
 			shooter.set(0);
@@ -308,9 +308,9 @@ public class Knight extends IterativeRobot {
 			//defaultVoltageShooter(atk.isPressed(2));
 		} else if (shooterMode == SHOOTER_BANG_BANG) {
 			if (atk.isPressed(2)) {
-				bangBangShooter(true, 4000);
-			} else if (atk.isPressed(4) || atk.isPressed(5)) {
 				bangBangShooter(true, 3800);
+			} else if (atk.isPressed(4) || atk.isPressed(5)) {
+				bangBangShooter(true, 3500);
 			} else {
 				shooterOff();
 			}
