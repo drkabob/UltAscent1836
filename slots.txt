@@ -3,7 +3,6 @@ Driver station LCD:
 2 Shooter encoder
 3 Drive gear status
 4 Tank drive or cheesy drive?
-5 Wheel encoders
 6 Compresor status
 
 Xbox Controller:
@@ -17,8 +16,10 @@ Trigger: slow mode
 
 Logitech ATK3:
 1 Actuator
-2 Shooter and kicker
+2 Shooter/kicker high speed
+4/5 Shooter/kicker low speed
 3 Reverse shooter and kicker
+9 Shooter mode to combined
 10 Shooter mode to bang bang
 11 Shooter mode to voltage
 

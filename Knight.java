@@ -89,8 +89,6 @@ public class Knight extends IterativeRobot {
 	private int shooterMode;
 	
 	private Counter shooterEnc;
-	private Encoder lWheels;
-	private Encoder rWheels;
 
 	// stuff for the InsightLT display
 	private InsightLT display;
@@ -374,7 +372,6 @@ public class Knight extends IterativeRobot {
 		
 		// print encoder values to see if they're working
 		lcd.println(DriverStationLCD.Line.kUser2,1,""+shooterEnc.getPeriod());
-		lcd.println(DriverStationLCD.Line.kUser5, 1,""+lWheels.get()+" "+rWheels.get());
 		
 		SmartDashboard.putNumber("Shooter speed", shooterEnc.getPeriod());
 		SmartDashboard.putNumber("Shooter RPM", 60/shooterEnc.getPeriod());
