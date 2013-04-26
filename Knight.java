@@ -47,8 +47,17 @@ public class Knight extends IterativeRobot {
 	private static final int HOOK_SOLENOID_B = 4;
 	private static final int SHOOTER_ENC = 1;
 	
+	// For slow mode
+	private static final double SLOW_MOD = 0.6;
+	
+	// For bang bang mode
 	private static final double SHOOTER_RPM_HIGH = 3800;
 	private static final double SHOOTER_RPM_LOW = 3500;
+	
+	// For voltage mode
+	// TODO: confirm shooter power values with Michael
+	private static final double SHOOTER_POWER_HIGH = 0.8;
+	private static final double SHOOTER_POWER_LOW = 0.6;
 	
 	JStick xbox; // XBox controller
 	JStick atk; // Logitech ATK3 controller
@@ -346,11 +355,11 @@ public class Knight extends IterativeRobot {
 		}
 
 		if (usingCheesy) {
-			drive.cheesyDrive(leftStickY*(slowMode?0.6:1), rightStickX, xbox.isPressed(JStick.XBOX_LJ));
+			drive.cheesyDrive(leftStickY*(slowMode?SLOW_MOD:1), rightStickX, xbox.isPressed(JStick.XBOX_LJ));
 			lcd.println(DriverStationLCD.Line.kUser4,1,"cheesy drive");
 		} else {
 			if (!drive.straightDrive(xbox.getAxis(JStick.XBOX_TRIG))) {
-				drive.tankDrive(leftStickY*(slowMode?0.6:1), rightStickY*(slowMode?0.6:1));
+				drive.tankDrive(leftStickY*(slowMode?SLOW_MOD:1), rightStickY*(slowMode?SLOW_MOD:1));
 				lcd.println(DriverStationLCD.Line.kUser4,1,"tank drive   ");
 			} else {
 				lcd.println(DriverStationLCD.Line.kUser4,1,"straightDrive");
