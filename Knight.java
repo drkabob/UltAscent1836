@@ -51,7 +51,7 @@ public class Knight extends IterativeRobot {
 	private static final double SLOW_MOD = 0.6;
 	
 	// For bang bang mode
-	private static final double SHOOTER_RPM_HIGH = 3900;
+	private static final double SHOOTER_RPM_HIGH = 3700;
 	private static final double SHOOTER_RPM_LOW = 3500;
 	
 	// For voltage mode
@@ -111,7 +111,7 @@ public class Knight extends IterativeRobot {
 	private void bangBangShooter(boolean on, double targetRPM) {
 		double shooterOutput;
 		if (on) {
-			shooterOutput = Utils.getBangBang(targetRPM, 0.5, shooterEnc);
+			shooterOutput = Utils.getBangBang(targetRPM, 0.6, shooterEnc);
 		} else {
 			shooterOutput = 0;
 		}
@@ -119,12 +119,12 @@ public class Knight extends IterativeRobot {
 		kicker.set(shooterOutput);
 	}
 	
-	private void combinedShooter(boolean on) {
+	private void combinedShooter(boolean on, double frac, double targetRPM) {
 		if (on) {
 			// shooter gets bang bang at the low speed
 			// kicker gets 80% voltage
-			shooter.set(Utils.getBangBang(SHOOTER_RPM_LOW,0.5,shooterEnc));
-			kicker.set(Utils.voltageSpeed(0.8));
+			shooter.set(Utils.getBangBang(targetRPM,0.6,shooterEnc));
+			kicker.set(Utils.voltageSpeed(frac));
 		} else {
 			shooter.set(0);
 			kicker.set(0);
@@ -335,7 +335,13 @@ public class Knight extends IterativeRobot {
 		} else if (shooterMode == SHOOTER_PID) {
 			// TO: shooter PID
 		} else if (shooterMode == SHOOTER_COMBINED) {
-			combinedShooter(atk.isPressed(2));
+			if (atk.isPressed(2)) {
+				combinedShooter(true,SHOOTER_POWER_HIGH,SHOOTER_RPM_HIGH);
+			} else if (atk.isPressed(4) || atk.isPressed(5)) {
+				combinedShooter(true, SHOOTER_POWER_LOW,SHOOTER_RPM_LOW);
+			} else {
+				shooterOff();
+			}
 		} else {
 			shooterOff();
 		}
@@ -370,9 +376,13 @@ public class Knight extends IterativeRobot {
 		}
 		
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
-			lcd.println(DriverStationLCD.Line.kUser1,1,"Shooter mode: voltage ");
+			lcd.println(DriverStationLCD.Line.kUser1,1,"Shooter mode:voltage ");
 		} else if (shooterMode == SHOOTER_BANG_BANG) {
-			lcd.println(DriverStationLCD.Line.kUser1,1,"Shooter mode: bangbang");
+			lcd.println(DriverStationLCD.Line.kUser1,1,"Shooter mode:bangbang");
+		} else if (shooterMode == SHOOTER_COMBINED) {
+			lcd.println(DriverStationLCD.Line.kUser1,1,"Shooter mode:combined");
+		} else {
+			lcd.println(DriverStationLCD.Line.kUser1,1,"Shooter mode:????????");
 		}
 		
 		// print encoder values to see if they're working
