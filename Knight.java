@@ -52,11 +52,11 @@ public class Knight extends IterativeRobot {
 	
 	// For bang bang mode
 	private static final double SHOOTER_RPM_HIGH = 3700;
-	private static final double SHOOTER_RPM_LOW = 3500;
+	private static final double SHOOTER_RPM_LOW = 3400;
 	
 	// For voltage mode
 	// TODO: confirm shooter power values with Michael
-	private static final double SHOOTER_POWER_HIGH = 0.8;
+	private static final double SHOOTER_POWER_HIGH = 0.7;
 	private static final double SHOOTER_POWER_LOW = 0.6;
 	
 	JStick xbox; // XBox controller
@@ -137,7 +137,7 @@ public class Knight extends IterativeRobot {
 	}
 	
 	private void defaultActuator(boolean on) {
-		actuator.set(on ? 0.5 : 0);
+		actuator.set(on ? 0.4 : 0);
 	}
 
 	public Knight() {
