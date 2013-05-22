@@ -10,9 +10,9 @@ A toggle cheesy
 B 
 LB Toggle high/low gear
 RB Toggle hook climb
-LJ (in cheesy drive) quickturn
+LJ 
 RJ 
-Trigger: slow mode
+Trigger: quickturn
 
 Logitech ATK3:
 1 Actuator

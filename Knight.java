@@ -55,7 +55,6 @@ public class Knight extends IterativeRobot {
 	private static final double SHOOTER_RPM_LOW = 3400;
 	
 	// For voltage mode
-	// TODO: confirm shooter power values with Michael
 	private static final double SHOOTER_POWER_HIGH = 0.7;
 	private static final double SHOOTER_POWER_LOW = 0.6;
 	
@@ -364,7 +363,11 @@ public class Knight extends IterativeRobot {
 		}
 
 		if (usingCheesy) {
-			drive.cheesyDrive(leftStickY*(slowMode?SLOW_MOD:1), rightStickX, xbox.isPressed(JStick.XBOX_LJ));
+			drive.cheesyDrive(leftStickY*(slowMode?SLOW_MOD:1), rightStickX,
+					//xbox.isPressed(JStick.XBOX_LJ)
+					// If either trigger is pressed, enable quickturn
+					Math.abs(xbox.getAxis(JStick.XBOX_TRIG)) > 0.5
+					);
 			lcd.println(DriverStationLCD.Line.kUser4,1,"cheesy drive");
 		} else {
 			if (!drive.straightDrive(xbox.getAxis(JStick.XBOX_TRIG))) {
