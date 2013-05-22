@@ -357,9 +357,9 @@ public class Knight extends IterativeRobot {
 
 		boolean slowMode = xbox.getAxis(JStick.XBOX_TRIG) < -0.5;
 		if (slowMode) {
-			driveGear.set(false);
+			//driveGear.set(false);
 		} else {
-			driveGear.set(normalGear);
+			//driveGear.set(normalGear);
 		}
 
 		if (usingCheesy) {
