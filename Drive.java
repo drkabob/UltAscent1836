@@ -89,10 +89,10 @@ public class Drive extends RobotDrive {
 		double angular_power = 0;
 		if (spin) {
 			if (Math.abs(power) < 0.2) {
-				quickStopAccumulator = 0.8*quickStopAccumulator + 0.2*turn*5;
+				//quickStopAccumulator = 0.8*quickStopAccumulator + 0.2*turn*5;
 			}
-			overPower = 1;
-			angular_power = turn;
+			//overPower = 1;
+			//angular_power = turn;
 		} else {
 			angular_power = power * turn - quickStopAccumulator;
 			if (quickStopAccumulator > 1) {
@@ -107,9 +107,14 @@ public class Drive extends RobotDrive {
 		double rPower = 0;
 		double lPower = 0;
 
-		rPower = lPower = power;
-		lPower += angular_power;
-		rPower -= angular_power;
+		if (spin) {
+			lPower = turn;
+			rPower = -turn;
+		} else {
+			rPower = lPower = power;
+			lPower += angular_power;
+			rPower -= angular_power;
+		}
 
 		if (lPower > 1) {
 			rPower-= overPower * (lPower - 1);
@@ -127,6 +132,13 @@ public class Drive extends RobotDrive {
 
 		tankDrive(lPower, rPower);
 		return true;
+	}
+	
+	public double getRight() {
+		return m_rearRightMotor.get();
+	}
+	public double getLeft() {
+		return m_rearLeftMotor.get();
 	}
 	
 	public Drive(int frontLeftMotor, int rearLeftMotor, int frontRightMotor,

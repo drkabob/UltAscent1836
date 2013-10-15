@@ -370,12 +370,8 @@ public class Knight extends IterativeRobot {
 					);
 			lcd.println(DriverStationLCD.Line.kUser4,1,"cheesy drive");
 		} else {
-			if (!drive.straightDrive(xbox.getAxis(JStick.XBOX_TRIG))) {
-				drive.tankDrive(leftStickY*(slowMode?SLOW_MOD:1), rightStickY*(slowMode?SLOW_MOD:1));
-				lcd.println(DriverStationLCD.Line.kUser4,1,"tank drive   ");
-			} else {
-				lcd.println(DriverStationLCD.Line.kUser4,1,"straightDrive");
-			}
+			drive.tankDrive(leftStickY*(slowMode?SLOW_MOD:1), rightStickY*(slowMode?SLOW_MOD:1));
+			lcd.println(DriverStationLCD.Line.kUser4,1,"tank drive   ");
 		}
 		
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
@@ -396,6 +392,9 @@ public class Knight extends IterativeRobot {
 		SmartDashboard.putNumber("Shooter count", shooterEnc.get());
 
 		SmartDashboard.putBoolean("Auton check", autonCheck.get());
+		
+		SmartDashboard.putNumber("Right Wheels", drive.getRight());
+		SmartDashboard.putNumber("Left Wheels", drive.getLeft());
 		
 		lcd.updateLCD();
 
