@@ -155,7 +155,7 @@ public class Knight extends IterativeRobot {
 
 		lcd = DriverStationLCD.getInstance();
 
-		usingCheesy = false;
+		usingCheesy = true;
 		integral_err = 0;
 		prev_err = 0;
 
