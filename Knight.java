@@ -346,7 +346,7 @@ public class Knight extends IterativeRobot {
 		}
 
 		// toggle the hook climb
-		if (xbox.isReleased(JStick.XBOX_RB)) {
+		if (xbox.isReleased(JStick.XBOX_RB) || atk.isReleased(11)) {
 			hookClimb.toggle();
 		}
 
