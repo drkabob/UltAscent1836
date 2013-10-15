@@ -63,7 +63,7 @@ public class Drive extends RobotDrive {
 	 * @return False if power is zero.
 	 */
 	public boolean cheesyDrive(double power, double turn, boolean spin) {
-		if (power == 0) {
+		if ((power == 0 && !spin) || (spin && turn == 0)) {
 			return false;
 		}
 
@@ -85,15 +85,15 @@ public class Drive extends RobotDrive {
 			neg_inertia_accumulator = 0;
 		}
 
-		double overPower = 0.0;
-		double angular_power = 0;
+		double rPower = 0;
+		double lPower = 0;
+
 		if (spin) {
-			if (Math.abs(power) < 0.2) {
-				//quickStopAccumulator = 0.8*quickStopAccumulator + 0.2*turn*5;
-			}
-			//overPower = 1;
-			//angular_power = turn;
+			rPower = turn;
+			lPower = -turn;
 		} else {
+			double overPower = 0.0;
+			double angular_power = 0;
 			angular_power = power * turn - quickStopAccumulator;
 			if (quickStopAccumulator > 1) {
 				quickStopAccumulator -= 1;
@@ -102,32 +102,24 @@ public class Drive extends RobotDrive {
 			} else {
 				quickStopAccumulator = 0;
 			}
-		}
 
-		double rPower = 0;
-		double lPower = 0;
-
-		if (spin) {
-			lPower = turn;
-			rPower = -turn;
-		} else {
 			rPower = lPower = power;
 			lPower += angular_power;
 			rPower -= angular_power;
-		}
 
-		if (lPower > 1) {
-			rPower-= overPower * (lPower - 1);
-			lPower = 1;
-		} else if (rPower > 1) {
-			lPower -= overPower * (rPower - 1);
-			rPower = 1;
-		} else if (lPower < -1) {
-			rPower += overPower * (-1 - lPower);
-			lPower = -1;
-		} else if (rPower < -1) {
-			lPower += overPower * (-1 - rPower);
-			rPower = -1;
+			if (lPower > 1) {
+				rPower-= overPower * (lPower - 1);
+				lPower = 1;
+			} else if (rPower > 1) {
+				lPower -= overPower * (rPower - 1);
+				rPower = 1;
+			} else if (lPower < -1) {
+				rPower += overPower * (-1 - lPower);
+				lPower = -1;
+			} else if (rPower < -1) {
+				lPower += overPower * (-1 - rPower);
+				rPower = -1;
+			}
 		}
 
 		tankDrive(lPower, rPower);
