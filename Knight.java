@@ -38,13 +38,14 @@ public class Knight extends IterativeRobot {
 	private static final int SHOOTER_TALON = 6;
 	private static final int ACTUATOR_TALON = 1;
 	private static final int KICKER_TALON = 5;
-	private static final int COMPRESSOR_PRESSURE_SWITCH = 5;
+	private static final int COMPRESSOR_PRESSURE_SWITCH = 7;
 	private static final int COMPRESSOR_RELAY_CHANNEL = 1;
 	private static final int DRIVE_SOLENOID_A = 1;
 	private static final int DRIVE_SOLENOID_B = 2;
 	private static final int HOOK_SOLENOID_A = 3;
 	private static final int HOOK_SOLENOID_B = 4;
-	private static final int SHOOTER_ENC = 1;
+	private static final int KICKER_ENC = 10;
+	private static final int SHOOTER_ENC = 11;
 	private static final int AUTON_CHECK_DI = 14;
 	
 	// For slow mode
@@ -88,6 +89,7 @@ public class Knight extends IterativeRobot {
 	private int shooterMode;
 	
 	private Counter shooterEnc;
+	private Counter kickerEnc;
 
 	// Used to determine which autonomous procedure to use
 	private DigitalInput autonCheck;
@@ -159,12 +161,12 @@ public class Knight extends IterativeRobot {
 		integral_err = 0;
 		prev_err = 0;
 
-		// pressure sensor is  3
         compressor = new Compressor(COMPRESSOR_PRESSURE_SWITCH,COMPRESSOR_RELAY_CHANNEL);
 		driveGear = new SolenoidXORPair(DRIVE_SOLENOID_A,DRIVE_SOLENOID_B);
 		normalGear = driveGear.get();
 		hookClimb = new SolenoidXANDPair(HOOK_SOLENOID_A,HOOK_SOLENOID_B);
 		
+		kickerEnc = new Counter(KICKER_ENC);
 		shooterEnc = new Counter(SHOOTER_ENC);
 
 		autonCheck = new DigitalInput(AUTON_CHECK_DI);
@@ -192,7 +194,8 @@ public class Knight extends IterativeRobot {
 
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearLeft,true);
-
+		
+		kickerEnc.start();
 		shooterEnc.start();
     }
 	//This function is called at the start of autonomous
@@ -390,6 +393,9 @@ public class Knight extends IterativeRobot {
 		SmartDashboard.putNumber("Shooter speed", shooterEnc.getPeriod());
 		SmartDashboard.putNumber("Shooter RPM", 60/shooterEnc.getPeriod());
 		SmartDashboard.putNumber("Shooter count", shooterEnc.get());
+		SmartDashboard.putNumber("Kicker speed", kickerEnc.getPeriod());
+		SmartDashboard.putNumber("Kicker RPM", 60/kickerEnc.getPeriod());
+		SmartDashboard.putNumber("Kicker count", kickerEnc.getPeriod());
 
 		SmartDashboard.putBoolean("Auton check", autonCheck.get());
 		
