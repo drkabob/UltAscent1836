@@ -208,7 +208,7 @@ public class Knight extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-		compressor.start();
+		//compressor.start();
 		driveGear.set(true);
 
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
@@ -294,7 +294,8 @@ public class Knight extends IterativeRobot {
 		*/
 		
 		//voltageShooter(true,0.6);
-		bangBangShooter(true,autonCheck.get() ? SHOOTER_RPM_HIGH : SHOOTER_RPM_LOW);
+		//bangBangShooter(true,autonCheck.get() ? SHOOTER_RPM_HIGH : SHOOTER_RPM_LOW);
+		bangBangShooter(true, SHOOTER_RPM_HIGH);
 		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
 		}
