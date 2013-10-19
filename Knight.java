@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SafePWM;
@@ -44,8 +45,16 @@ public class Knight extends IterativeRobot {
 	private static final int DRIVE_SOLENOID_B = 2;
 	private static final int HOOK_SOLENOID_A = 3;
 	private static final int HOOK_SOLENOID_B = 4;
-	private static final int KICKER_ENC = 10;
-	private static final int SHOOTER_ENC = 11;
+	private static final int CASTER_A = 7;
+	private static final int CASTER_B = 8;
+	
+	private static final int KICKER_ENC = 9;
+	private static final int SHOOTER_ENC = 8;
+	private static final int LEFT_ENC_A = 11;
+	private static final int LEFT_ENC_B = 12;
+	private static final int RIGHT_ENC_A = 13;
+	private static final int RIGHT_ENC_B = 14;
+	
 	private static final int AUTON_CHECK_DI = 14;
 	
 	// For slow mode
@@ -76,7 +85,8 @@ public class Knight extends IterativeRobot {
 	private boolean normalGear;
 
 	private SolenoidPair hookClimb;
-	
+	private SolenoidPair caster;
+
 	private Drive drive;
 	private SpeedController shooter;
 	private SpeedController actuator;
@@ -91,6 +101,9 @@ public class Knight extends IterativeRobot {
 	private Counter shooterEnc;
 	private Counter kickerEnc;
 
+	private Encoder leftEnc;
+	private Encoder rightEnc;
+	
 	// Used to determine which autonomous procedure to use
 	private DigitalInput autonCheck;
 
@@ -165,10 +178,16 @@ public class Knight extends IterativeRobot {
 		driveGear = new SolenoidXORPair(DRIVE_SOLENOID_A,DRIVE_SOLENOID_B);
 		normalGear = driveGear.get();
 		hookClimb = new SolenoidXANDPair(HOOK_SOLENOID_A,HOOK_SOLENOID_B);
+		caster = new SolenoidXANDPair(CASTER_A,CASTER_B);
 		
 		kickerEnc = new Counter(KICKER_ENC);
 		shooterEnc = new Counter(SHOOTER_ENC);
-
+		/*
+		leftEnc = new Encoder(LEFT_ENC_A, LEFT_ENC_B);
+		rightEnc = new Encoder(RIGHT_ENC_A, RIGHT_ENC_B);
+		leftEnc.setDistancePerPulse(0.098);
+		rightEnc.setDistancePerPulse(0.098);
+		*/
 		autonCheck = new DigitalInput(AUTON_CHECK_DI);
 
 		// configure the display to have two lines of text
@@ -197,6 +216,10 @@ public class Knight extends IterativeRobot {
 		
 		kickerEnc.start();
 		shooterEnc.start();
+		
+		//leftEnc.start();
+		//rightEnc.start();
+		
     }
 	//This function is called at the start of autonomous
 	Timer timer;
@@ -308,6 +331,7 @@ public class Knight extends IterativeRobot {
 		// joystick button 1 spins the actuator
 		defaultActuator(atk.isPressed(1));
 		
+		/*
 		// change shooter modes
 		if (atk.isPressed(11)) {
 			shooterMode = SHOOTER_MODE_VOLTAGE;
@@ -316,6 +340,7 @@ public class Knight extends IterativeRobot {
 		} else if (atk.isPressed(9)) {
 			shooterMode = SHOOTER_COMBINED;
 		}
+		*/
 		
 		if (shooterMode == SHOOTER_MODE_VOLTAGE) {
 			if (atk.isPressed(2)) {
@@ -349,8 +374,13 @@ public class Knight extends IterativeRobot {
 		}
 
 		// toggle the hook climb
-		if (xbox.isReleased(JStick.XBOX_RB) || atk.isReleased(11)) {
+		if (atk.isReleased(11)) {
 			hookClimb.toggle();
+		}
+
+		// toggle the caster
+		if (xbox.isReleased(JStick.XBOX_RB)) {
+			caster.toggle();
 		}
 
 		//double leftStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_LSX), JITTER_RANGE);
@@ -396,7 +426,12 @@ public class Knight extends IterativeRobot {
 		SmartDashboard.putNumber("Kicker speed", kickerEnc.getPeriod());
 		SmartDashboard.putNumber("Kicker RPM", 60/kickerEnc.getPeriod());
 		SmartDashboard.putNumber("Kicker count", kickerEnc.getPeriod());
-
+		/*
+		SmartDashboard.putNumber("Left Rate", leftEnc.getRate());
+		SmartDashboard.putNumber("Left Distance", leftEnc.getDistance());
+		SmartDashboard.putNumber("Right Rate", rightEnc.getRate());
+		SmartDashboard.putNumber("Right Distance", rightEnc.getDistance());
+		*/
 		SmartDashboard.putBoolean("Auton check", autonCheck.get());
 		
 		SmartDashboard.putNumber("Right Wheels", drive.getRight());
