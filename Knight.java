@@ -48,8 +48,8 @@ public class Knight extends IterativeRobot {
 	private static final int CASTER_A = 7;
 	private static final int CASTER_B = 8;
 	
-	private static final int KICKER_ENC = 9;
-	private static final int SHOOTER_ENC = 8;
+	private static final int KICKER_ENC = 8;
+	private static final int SHOOTER_ENC = 9;
 	private static final int LEFT_ENC_A = 11;
 	private static final int LEFT_ENC_B = 12;
 	private static final int RIGHT_ENC_A = 13;
@@ -208,7 +208,7 @@ public class Knight extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-		//compressor.start();
+		compressor.start();
 		driveGear.set(true);
 
 		drive.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
@@ -295,7 +295,7 @@ public class Knight extends IterativeRobot {
 		
 		//voltageShooter(true,0.6);
 		//bangBangShooter(true,autonCheck.get() ? SHOOTER_RPM_HIGH : SHOOTER_RPM_LOW);
-		bangBangShooter(true, SHOOTER_RPM_HIGH);
+		bangBangShooter(true, SHOOTER_RPM_LOW);
 		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
 		}
