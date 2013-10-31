@@ -17,12 +17,14 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SafePWM;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -54,6 +56,8 @@ public class Knight extends IterativeRobot {
 	private static final int LEFT_ENC_B = 12;
 	private static final int RIGHT_ENC_A = 13;
 	private static final int RIGHT_ENC_B = 14;
+	
+	private static final int GYRO = 1;
 	
 	private static final int AUTON_CHECK_DI = 14;
 	
@@ -103,6 +107,8 @@ public class Knight extends IterativeRobot {
 
 	private Encoder leftEnc;
 	private Encoder rightEnc;
+	
+	private Gyro gyro;
 	
 	// Used to determine which autonomous procedure to use
 	private DigitalInput autonCheck;
@@ -182,13 +188,15 @@ public class Knight extends IterativeRobot {
 		
 		kickerEnc = new Counter(KICKER_ENC);
 		shooterEnc = new Counter(SHOOTER_ENC);
-		/*
-		leftEnc = new Encoder(LEFT_ENC_A, LEFT_ENC_B);
-		rightEnc = new Encoder(RIGHT_ENC_A, RIGHT_ENC_B);
-		leftEnc.setDistancePerPulse(0.098);
-		rightEnc.setDistancePerPulse(0.098);
-		*/
-		autonCheck = new DigitalInput(AUTON_CHECK_DI);
+		leftEnc = new Encoder(LEFT_ENC_A, LEFT_ENC_B, true, EncodingType.k4X);
+		rightEnc = new Encoder(RIGHT_ENC_A, RIGHT_ENC_B, false, EncodingType.k4X);
+		// inches
+		leftEnc.setDistancePerPulse(0.105);
+		rightEnc.setDistancePerPulse(0.105);
+		
+		gyro = new Gyro(GYRO);
+		
+		//autonCheck = new DigitalInput(AUTON_CHECK_DI);
 
 		// configure the display to have two lines of text
 		display = new InsightLT(InsightLT.TWO_ONE_LINE_ZONES);
@@ -217,8 +225,8 @@ public class Knight extends IterativeRobot {
 		kickerEnc.start();
 		shooterEnc.start();
 		
-		//leftEnc.start();
-		//rightEnc.start();
+		leftEnc.start();
+		rightEnc.start();
 		
     }
 	//This function is called at the start of autonomous
@@ -427,13 +435,14 @@ public class Knight extends IterativeRobot {
 		SmartDashboard.putNumber("Kicker speed", kickerEnc.getPeriod());
 		SmartDashboard.putNumber("Kicker RPM", 60/kickerEnc.getPeriod());
 		SmartDashboard.putNumber("Kicker count", kickerEnc.getPeriod());
-		/*
 		SmartDashboard.putNumber("Left Rate", leftEnc.getRate());
 		SmartDashboard.putNumber("Left Distance", leftEnc.getDistance());
+		SmartDashboard.putNumber("Left Raw", leftEnc.getRaw());
 		SmartDashboard.putNumber("Right Rate", rightEnc.getRate());
 		SmartDashboard.putNumber("Right Distance", rightEnc.getDistance());
-		*/
-		SmartDashboard.putBoolean("Auton check", autonCheck.get());
+		SmartDashboard.putNumber("Right Raw", rightEnc.getRaw());
+		SmartDashboard.putNumber("Gyro", gyro.getAngle());
+		//SmartDashboard.putBoolean("Auton check", autonCheck.get());
 		
 		SmartDashboard.putNumber("Right Wheels", drive.getRight());
 		SmartDashboard.putNumber("Left Wheels", drive.getLeft());
@@ -468,6 +477,7 @@ public class Knight extends IterativeRobot {
 	 * This function is called periodically during test mode
 	 */
 	public void testPeriodic() {
+		/*
 		xbox.update();
 		atk.update();
 
@@ -523,5 +533,6 @@ public class Knight extends IterativeRobot {
 			lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
 			lcd.updateLCD();
 		}
+		*/
 	}
 }
