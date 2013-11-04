@@ -229,7 +229,8 @@ public class Knight extends IterativeRobot {
 		rightEnc.start();
 		
     }
-	//This function is called at the start of autonomous
+
+    //This function is called at the start of autonomous
 	Timer timer;
 
 	double autonStart;
@@ -239,7 +240,11 @@ public class Knight extends IterativeRobot {
 		//kicker.set(0.9);
 		autonStart = Timer.getFPGATimestamp();
 		frisbeesThrown = 0;
-		driveGear.set(true);
+		driveGear.set(false);
+		
+		// reset encoders
+		rightEnc.reset();
+		leftEnc.reset();
 	}
 	/**
 	 * This function is called periodically during autonomous
@@ -249,12 +254,16 @@ public class Knight extends IterativeRobot {
 	double last_timer;
 	boolean frisbeeDone;
 	final double WAIT_AFTER_ACTUATOR = 1;
+	final double WAIT_AFTER_SHOOTING = 6;
 	final double DELAY_BETWEEN_FRISBEES = 2.25;
 	final double FRISBEE_SHOOT_TIME = 0.25;
+	final double DRIVE_DISTANCE = 96;
 
 	final double DRIVE_FORWARD_TIME = 2;
 
 	public void autonomousPeriodic() {
+		double currentTime = Timer.getFPGATimestamp() - autonStart;
+
 		/*
 		//drive.tankDrive(0.4, 0.4);
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
@@ -271,7 +280,6 @@ public class Knight extends IterativeRobot {
 		*/
 		
 		/*
-		double currentTime = Timer.getFPGATimestamp() - autonStart;
 		double cycleTime = currentTime - WAIT_AFTER_ACTUATOR - (frisbeesThrown*DELAY_BETWEEN_FRISBEES);
 		SmartDashboard.putNumber("current time", currentTime);
 		SmartDashboard.putNumber("cycle time", cycleTime);
@@ -304,7 +312,27 @@ public class Knight extends IterativeRobot {
 		//voltageShooter(true,0.6);
 		//bangBangShooter(true,autonCheck.get() ? SHOOTER_RPM_HIGH : SHOOTER_RPM_LOW);
 		bangBangShooter(true, SHOOTER_RPM_LOW);
-		if (Timer.getFPGATimestamp() - autonStart > WAIT_AFTER_ACTUATOR) {
+		if (currentTime > WAIT_AFTER_SHOOTING) {
+			defaultActuator(false);
+			
+			double left = 0;
+			double right = 0;
+			boolean leftDone = false;
+			// keep going backwards until encoders read 8 feet
+			if (Math.abs(leftEnc.getDistance()) < DRIVE_DISTANCE) {
+				left = -1;
+			} else {
+				leftDone = true;
+			}
+			if (Math.abs(rightEnc.getDistance()) < DRIVE_DISTANCE) {
+				right = -1;
+			} else if (leftDone)  {
+				// if both sides are finished, go back to high gear
+				driveGear.set(true);
+			}
+
+			drive.tankDrive(left,right);
+		} else if (currentTime > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
 		}
 	}
@@ -457,6 +485,14 @@ public class Knight extends IterativeRobot {
 	public void disabledPeriodic() {
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("disabled");
+		
+		/*
+		if (DriverStation.getInstance().isFMSAttached()) {
+    		display.stopDisplay();
+    	} else {
+    		display.startDisplay();
+    	}
+    	*/
 	}
 
 	private boolean shootTester;
