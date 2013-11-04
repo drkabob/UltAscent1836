@@ -172,6 +172,8 @@ public class Knight extends IterativeRobot {
 		shooterMode = SHOOTER_BANG_BANG;
 
 		xbox = new JStick(1);
+		xbox.setSlow(0.3);
+
 		atk = new JStick(2);
 
 		lcd = DriverStationLCD.getInstance();
@@ -425,6 +427,7 @@ public class Knight extends IterativeRobot {
 		double rightStickX = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSX), JITTER_RANGE);
 		double rightStickY = JStick.removeJitter(xbox.getAxis(JStick.XBOX_RSY), JITTER_RANGE);
 
+
 		boolean slowMode = xbox.getAxis(JStick.XBOX_TRIG) < -0.5;
 		if (slowMode) {
 			//driveGear.set(false);
@@ -433,7 +436,7 @@ public class Knight extends IterativeRobot {
 		}
 
 		if (usingCheesy) {
-			drive.cheesyDrive(leftStickY*(slowMode?SLOW_MOD:1), rightStickX,
+			drive.cheesyDrive(xbox.getSlowedAxis(JStick.XBOX_LSY)*(slowMode?SLOW_MOD:1), rightStickX,
 					//xbox.isPressed(JStick.XBOX_LJ)
 					// If either trigger is pressed, enable quickturn
 					Math.abs(xbox.getAxis(JStick.XBOX_TRIG)) > 0.5

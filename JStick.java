@@ -30,6 +30,9 @@ public class JStick {
 	private boolean[] buttonPressed;
 	private boolean[] buttonLastPressed;
 	private double[] axes;
+	private double[] slowAxes;
+
+	private double slow;
 
 	public JStick(int port) {
 		// initialize everything
@@ -37,6 +40,8 @@ public class JStick {
 		buttonPressed = new boolean[MAX_BUTTONS+1];
 		buttonLastPressed = new boolean[MAX_BUTTONS+1];
 		axes = new double[MAX_AXES+1];
+		slowAxes = new double[MAX_AXES+1];
+		slow = 2;
 	}
 
 	public void update() {
@@ -46,8 +51,33 @@ public class JStick {
 		}
 
 		for(int i = 1; i < axes.length; ++i) {
-			axes[i] = jstick.getRawAxis(i);
+			double newAxis = jstick.getRawAxis(i);
+			
+			if (newAxis - axes[i] > slow) {
+				slowAxes[i] += slow;
+			} else if (axes[i] - newAxis > slow) {
+				slowAxes[i] -= slow;
+			} else {
+				slowAxes[i] = newAxis;
+			}
+			axes[i] = newAxis;
 		}
+	}
+
+	/**
+	 * The output of joystick axes can be slowed down
+	 * so that after each update its output will only
+	 * deviate from previous value at a maximum of the
+	 * slow value.
+	 *
+	 * @param r The new slow value. This should be a positive number.
+	 */
+	public void setSlow(double s) {
+		slow = Math.abs(s);
+	}
+
+	public double getSlow() {
+		return slow;
 	}
 	
 	/**
@@ -83,6 +113,12 @@ public class JStick {
 	public double getAxis(int b) {
 		if(b >= 0 && b < axes.length)
 			return axes[b];
+		else return 0;
+	}
+
+	public double getSlowedAxis(int b) {
+		if(b >= 0 && b < axes.length)
+			return slowAxes[b];
 		else return 0;
 	}
 	
