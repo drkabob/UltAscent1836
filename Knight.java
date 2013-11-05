@@ -361,6 +361,7 @@ public class Knight extends IterativeRobot {
 			drive.tankDrive(left,right);
 		} else if (currentTime > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
+			bangBangShooter(true, SHOOTER_RPM_HIGH);
 		} else {
 			bangBangShooter(true, SHOOTER_RPM_HIGH);
 		}
