@@ -185,7 +185,7 @@ public class Knight extends IterativeRobot {
 		integral_err = 0;
 		prev_err = 0;
 
-        compressor = new Compressor(COMPRESSOR_PRESSURE_SWITCH,COMPRESSOR_RELAY_CHANNEL);
+                compressor = new Compressor(COMPRESSOR_PRESSURE_SWITCH,COMPRESSOR_RELAY_CHANNEL);
 		driveGear = new SolenoidXORPair(DRIVE_SOLENOID_A,DRIVE_SOLENOID_B);
 		normalGear = driveGear.get();
 		hookClimb = new SolenoidXANDPair(HOOK_SOLENOID_A,HOOK_SOLENOID_B);
@@ -263,7 +263,7 @@ public class Knight extends IterativeRobot {
 	final double WAIT_AFTER_SHOOTING = WAIT_AFTER_ACTUATOR+3.5;
 	final double DELAY_BETWEEN_FRISBEES = 2.25;
 	final double FRISBEE_SHOOT_TIME = 0.25;
-	final double DRIVE_DISTANCE = 108;
+	final double DRIVE_DISTANCE = 102;
 	final double SLOWDOWN_TIME = 0.25;
 
 	final double DRIVE_FORWARD_TIME = 2;
@@ -341,7 +341,7 @@ public class Knight extends IterativeRobot {
 				driveGear.set(true);
 			}
 			*/
-			if (Math.abs(leftEnc.getDistance()) < DRIVE_DISTANCE &&
+			if (Math.abs(leftEnc.getDistance()) < DRIVE_DISTANCE ||
 					Math.abs(rightEnc.getDistance()) < DRIVE_DISTANCE) {
 				left = 1;
 				right = 1;
@@ -360,7 +360,7 @@ public class Knight extends IterativeRobot {
 		} else if (currentTime > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
 		} else {
-			bangBangShooter(true, SHOOTER_RPM_LOW);
+			bangBangShooter(true, SHOOTER_RPM_HIGH);
 		}
 	}
 	public void teleopInit() {
