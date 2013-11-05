@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SafePWM;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -110,6 +111,8 @@ public class Knight extends IterativeRobot {
 	
 	private Gyro gyro;
 	
+	private Relay light;
+	
 	// Used to determine which autonomous procedure to use
 	private DigitalInput autonCheck;
 
@@ -193,10 +196,12 @@ public class Knight extends IterativeRobot {
 		leftEnc = new Encoder(LEFT_ENC_A, LEFT_ENC_B, true, EncodingType.k4X);
 		rightEnc = new Encoder(RIGHT_ENC_A, RIGHT_ENC_B, false, EncodingType.k4X);
 		// inches
-		leftEnc.setDistancePerPulse(0.105);
-		rightEnc.setDistancePerPulse(0.105);
+		leftEnc.setDistancePerPulse(0.102);
+		rightEnc.setDistancePerPulse(0.102);
 		
 		gyro = new Gyro(GYRO);
+		
+		light = new Relay(2);
 		
 		//autonCheck = new DigitalInput(AUTON_CHECK_DI);
 
@@ -228,9 +233,8 @@ public class Knight extends IterativeRobot {
 		shooterEnc.start();
 		
 		leftEnc.start();
-		rightEnc.start();
-		
-    }
+		rightEnc.start();		
+	}
 
     //This function is called at the start of autonomous
 	Timer timer;
@@ -256,13 +260,15 @@ public class Knight extends IterativeRobot {
 	double last_timer;
 	boolean frisbeeDone;
 	final double WAIT_AFTER_ACTUATOR = 1;
-	final double WAIT_AFTER_SHOOTING = 6;
+	final double WAIT_AFTER_SHOOTING = WAIT_AFTER_ACTUATOR+3.5;
 	final double DELAY_BETWEEN_FRISBEES = 2.25;
 	final double FRISBEE_SHOOT_TIME = 0.25;
-	final double DRIVE_DISTANCE = 96;
+	final double DRIVE_DISTANCE = 108;
+	final double SLOWDOWN_TIME = 0.25;
 
 	final double DRIVE_FORWARD_TIME = 2;
 
+	double finishedMovingForward = -1;
 	public void autonomousPeriodic() {
 		double currentTime = Timer.getFPGATimestamp() - autonStart;
 
@@ -313,14 +319,16 @@ public class Knight extends IterativeRobot {
 		
 		//voltageShooter(true,0.6);
 		//bangBangShooter(true,autonCheck.get() ? SHOOTER_RPM_HIGH : SHOOTER_RPM_LOW);
-		bangBangShooter(true, SHOOTER_RPM_LOW);
 		if (currentTime > WAIT_AFTER_SHOOTING) {
+			bangBangShooter(false,0);
+
 			defaultActuator(false);
 			
 			double left = 0;
 			double right = 0;
 			boolean leftDone = false;
 			// keep going backwards until encoders read 8 feet
+			/*
 			if (Math.abs(leftEnc.getDistance()) < DRIVE_DISTANCE) {
 				left = -1;
 			} else {
@@ -332,13 +340,32 @@ public class Knight extends IterativeRobot {
 				// if both sides are finished, go back to high gear
 				driveGear.set(true);
 			}
+			*/
+			if (Math.abs(leftEnc.getDistance()) < DRIVE_DISTANCE &&
+					Math.abs(rightEnc.getDistance()) < DRIVE_DISTANCE) {
+				left = 1;
+				right = 1;
+			} else {
+				if (finishedMovingForward == -1) {
+					finishedMovingForward = currentTime;
+				}
+				driveGear.set(true);
+				if (currentTime-finishedMovingForward < SLOWDOWN_TIME) {
+					left = -0.5;
+					right = -0.5;
+				}
+			}
 
 			drive.tankDrive(left,right);
 		} else if (currentTime > WAIT_AFTER_ACTUATOR) {
 			defaultActuator(true);
+		} else {
+			bangBangShooter(true, SHOOTER_RPM_LOW);
 		}
 	}
-
+	public void teleopInit() {
+		light.set(Relay.Value.kForward);
+	}
     /**
      * This function is called periodically during operator control
      */
@@ -488,6 +515,10 @@ public class Knight extends IterativeRobot {
 	public void disabledPeriodic() {
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("disabled");
+		
+		//$wag
+		leftEnc.reset();
+		rightEnc.reset();
 		
 		/*
 		if (DriverStation.getInstance().isFMSAttached()) {
