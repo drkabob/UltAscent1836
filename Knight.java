@@ -243,7 +243,7 @@ public class Knight extends IterativeRobot {
 	int frisbeesThrown;
 	public void autonomousInit() {
             
-                display.stopDisplay();
+                //display.stopDisplay();
 		//shooter.set(0.9);
 		//kicker.set(0.9);
 		autonStart = Timer.getFPGATimestamp();
@@ -511,21 +511,18 @@ public class Knight extends IterativeRobot {
 		SmartDashboard.putNumber("Right Wheels", drive.getRight());
 		SmartDashboard.putNumber("Left Wheels", drive.getLeft());
 		
-                /*
+                
 		lcd.updateLCD();
 
 		// update the display
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("teleop");
-                */
+                
     }
 
 	public void disabledPeriodic() {
 		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
 		disp_message.setData("disabled");
-                
-                display.startDisplay();
-                lcd.updateLCD();
 		
 		//$wag
 		leftEnc.reset();
