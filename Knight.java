@@ -165,7 +165,7 @@ public class Knight extends IterativeRobot {
 
 	public Knight() {
 		// get robot preferences, stored on the cRIO
-		drive = new Drive(LEFT_MOTOR, RIGHT_MOTOR);
+		drive = new Drive(new Talon(LEFT_MOTOR), new Talon(RIGHT_MOTOR));
 
 		shooter = new Talon(SHOOTER_TALON);
 		actuator = new Talon(ACTUATOR_TALON);
