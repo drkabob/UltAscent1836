@@ -72,7 +72,7 @@ public class Drive extends RobotDrive {
 
 		turn = curveInput(turn,2);
 
-		double neg_inertia_scalar = 5;
+		double neg_inertia_scalar = 2.5;
 
 		double neg_inertia_power = neg_inertia * neg_inertia_scalar;
 		neg_inertia_accumulator += neg_inertia_power;
