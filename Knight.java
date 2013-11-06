@@ -351,10 +351,13 @@ public class Knight extends IterativeRobot {
 				if (finishedMovingForward == -1) {
 					finishedMovingForward = currentTime;
 				}
-				driveGear.set(true);
+				
 				if (currentTime-finishedMovingForward < SLOWDOWN_TIME) {
+					driveGear.set(false);
 					left = -0.5;
 					right = -0.5;
+				} else {
+					driveGear.set(true);
 				}
 			}
 
