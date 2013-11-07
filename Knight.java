@@ -26,6 +26,9 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -36,6 +39,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Knight extends IterativeRobot {
+    
+        // Constants...
 	private static final double JITTER_RANGE = 0.008;
 	private static final int LEFT_MOTOR = 4;
 	private static final int RIGHT_MOTOR = 9;
@@ -66,12 +71,16 @@ public class Knight extends IterativeRobot {
 	private static final double SLOW_MOD = 0.6;
 	
 	// For bang bang mode
-	private static final double SHOOTER_RPM_HIGH = 3700;
-	private static final double SHOOTER_RPM_LOW = 3400;
+	public static final double SHOOTER_RPM_HIGH = 3700;
+	public static final double SHOOTER_RPM_LOW = 3400;
 	
 	// For voltage mode
-	private static final double SHOOTER_POWER_HIGH = 0.7;
-	private static final double SHOOTER_POWER_LOW = 0.6;
+	public static final double SHOOTER_POWER_HIGH = 0.7;
+	public static final double SHOOTER_POWER_LOW = 0.6;
+        
+        // Pseudo-enumerator for Auton options...
+        public static int AUTON_CENTER = 0;
+        public static int AUTON_SIDE = 1;
 	
 	JStick xbox; // XBox controller
 	JStick atk; // Logitech ATK3 controller
@@ -83,7 +92,7 @@ public class Knight extends IterativeRobot {
 
 	// Pair state "true" means high gear,
 	// Pair state "false" means low gear
-	private SolenoidPair driveGear;
+	public SolenoidPair driveGear;
 
 	// used to remember the gear that is being used
 	// while in and out of slow mode
@@ -92,7 +101,7 @@ public class Knight extends IterativeRobot {
 	private SolenoidPair hookClimb;
 	private SolenoidPair caster;
 
-	private Drive drive;
+	public Drive drive;
 	private SpeedController shooter;
 	private SpeedController actuator;
 	private SpeedController kicker;
@@ -106,12 +115,16 @@ public class Knight extends IterativeRobot {
 	private Counter shooterEnc;
 	private Counter kickerEnc;
 
-	private Encoder leftEnc;
-	private Encoder rightEnc;
+	public Encoder leftEnc;
+	public Encoder rightEnc;
 	
 	private Gyro gyro;
 	
 	private Relay light;
+        
+        Command autonomousCommand;
+        SendableChooser autoChooser;
+        
 	
 	// Used to determine which autonomous procedure to use
 	private DigitalInput autonCheck;
@@ -120,7 +133,8 @@ public class Knight extends IterativeRobot {
 	private InsightLT display;
 	private DecimalData disp_batteryVoltage;
 	private StringData disp_message;
-	
+
+        
 	private void defaultVoltageShooter(boolean on) {
 		voltageShooter(on, 0.65);
 	}
@@ -131,7 +145,7 @@ public class Knight extends IterativeRobot {
 		kicker.set(output);
 	}
 
-	private void bangBangShooter(boolean on, double targetRPM) {
+	public void bangBangShooter(boolean on, double targetRPM) {
 		double shooterOutput;
 		if (on) {
 			shooterOutput = Utils.getBangBang(targetRPM, 0.6, shooterEnc);
@@ -159,7 +173,7 @@ public class Knight extends IterativeRobot {
 		kicker.set(0);
 	}
 	
-	private void defaultActuator(boolean on) {
+	public void defaultActuator(boolean on) {
 		actuator.set(on ? 0.4 : 0);
 	}
 
@@ -233,7 +247,17 @@ public class Knight extends IterativeRobot {
 		shooterEnc.start();
 		
 		leftEnc.start();
-		rightEnc.start();		
+		rightEnc.start();
+                
+                
+                SmartDashboard.putData(Scheduler.getInstance());
+                //SmartDashboard.putData("Reset Drive Encoders", rightEnc.reset(), leftEnc.reset());
+                
+                
+                autoChooser = new SendableChooser();
+                autoChooser.addDefault("Center Autonomous", new Auton(this, AUTON_CENTER));
+                autoChooser.addObject("Side Autonomous", new Auton(this, AUTON_SIDE));
+                SmartDashboard.putData("Autonomous Mode Chooser", autoChooser);
 	}
 
     //This function is called at the start of autonomous
@@ -243,16 +267,9 @@ public class Knight extends IterativeRobot {
 	int frisbeesThrown;
 	public void autonomousInit() {
             
-                //display.stopDisplay();
-		//shooter.set(0.9);
-		//kicker.set(0.9);
-		autonStart = Timer.getFPGATimestamp();
-		frisbeesThrown = 0;
-		driveGear.set(false);
-		
-		// reset encoders
-		rightEnc.reset();
-		leftEnc.reset();
+                autonomousCommand = (Command) autoChooser.getSelected();
+                autonomousCommand.start();
+            
 	}
 	/**
 	 * This function is called periodically during autonomous
@@ -270,104 +287,10 @@ public class Knight extends IterativeRobot {
 
 	final double DRIVE_FORWARD_TIME = 2;
 
-	double finishedMovingForward = -1;
+	public double finishedMovingForward = -1;
+        
 	public void autonomousPeriodic() {
-		double currentTime = Timer.getFPGATimestamp() - autonStart;
-
-		/*
-		//drive.tankDrive(0.4, 0.4);
-		disp_batteryVoltage.setData(DriverStation.getInstance().getBatteryVoltage());
-		disp_message.setData("autonomous");
-
-		if (timer.get() > 1000) {
-			shooter.set(-1);
-		}
-		if (timer.get() > 6000) {
-			actuator.set(0.4);
-		}
-		lcd.println(DriverStationLCD.Line.kUser1, 1, "" + timer.get());
-		lcd.updateLCD();
-		*/
-		
-		/*
-		double cycleTime = currentTime - WAIT_AFTER_ACTUATOR - (frisbeesThrown*DELAY_BETWEEN_FRISBEES);
-		SmartDashboard.putNumber("current time", currentTime);
-		SmartDashboard.putNumber("cycle time", cycleTime);
-		if (cycleTime > 0) {
-			if (cycleTime < FRISBEE_SHOOT_TIME) {
-				frisbeeDone = false;
-				actuator.set(1);
-			} else {
-				if (!frisbeeDone) {
-					frisbeeDone = true;
-					frisbeesThrown++;
-					actuator.set(0);
-				}
-			}
-		} else {
-			actuator.set(0);
-		}
-		SmartDashboard.putBoolean("Frisbee done",frisbeeDone);
-		SmartDashboard.putNumber("Frisbees thrown",frisbeesThrown);
-		*/
-		/*
-		if (currentTime < DRIVE_FORWARD_TIME) {
-			drive.tankDrive(0.4,0.4);
-		} else {
-			drive.tankDrive(0,0);
-			actuator.set(1);
-		}
-		*/
-		
-		//voltageShooter(true,0.6);
-		//bangBangShooter(true,autonCheck.get() ? SHOOTER_RPM_HIGH : SHOOTER_RPM_LOW);
-		if (currentTime > WAIT_AFTER_SHOOTING) {
-			bangBangShooter(false,0);
-
-			defaultActuator(false);
-			
-			double left = 0;
-			double right = 0;
-			boolean leftDone = false;
-			// keep going backwards until encoders read 8 feet
-			/*
-			if (Math.abs(leftEnc.getDistance()) < DRIVE_DISTANCE) {
-				left = -1;
-			} else {
-				leftDone = true;
-			}
-			if (Math.abs(rightEnc.getDistance()) < DRIVE_DISTANCE) {
-				right = -1;
-			} else if (leftDone)  {
-				// if both sides are finished, go back to high gear
-				driveGear.set(true);
-			}
-			*/
-			if (Math.abs(leftEnc.getDistance()) < DRIVE_DISTANCE ||
-					Math.abs(rightEnc.getDistance()) < DRIVE_DISTANCE) {
-				left = 1;
-				right = 1;
-			} else {
-				if (finishedMovingForward == -1) {
-					finishedMovingForward = currentTime;
-				}
-				
-				if (currentTime-finishedMovingForward < SLOWDOWN_TIME) {
-					driveGear.set(false);
-					left = -0.5;
-					right = -0.5;
-				} else {
-					driveGear.set(true);
-				}
-			}
-
-			drive.tankDrive(left,right);
-		} else if (currentTime > WAIT_AFTER_ACTUATOR) {
-			defaultActuator(true);
-			bangBangShooter(true, SHOOTER_RPM_HIGH);
-		} else {
-			bangBangShooter(true, SHOOTER_RPM_HIGH);
-		}
+            Scheduler.getInstance().run();
 	}
 	public void teleopInit() {
 		light.set(Relay.Value.kForward);
